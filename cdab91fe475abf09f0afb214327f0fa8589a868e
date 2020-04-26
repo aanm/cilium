@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bcebd95a_5e849baa",
+        "filename": "pkg/k8s/apis/cilium.io/v2/types_test.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1017884
+      },
+      "writtenOn": "2020-04-26T13:26:41Z",
+      "side": 1,
+      "message": "Comment this line",
+      "revId": "cdab91fe475abf09f0afb214327f0fa8589a868e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
