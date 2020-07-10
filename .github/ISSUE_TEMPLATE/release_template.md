@@ -31,6 +31,8 @@ assignees: ''
   - [ ] Run `contrib/release/start-release.sh'
   - [ ] (If applicable) Update the `cilium_version` and `cilium_tag` in
         `examples/getting-started/Vagrantfile`
+  - [ ] Follow the instructions in the release process on how to update the CRD
+        schema version in the docs and in the source code.
   - [ ] Commit all changes with title `Prepare for release vX.Y.Z`
   - [ ] Submit PR (`contrib/release/submit-release.sh`)
 - [ ] Merge PR

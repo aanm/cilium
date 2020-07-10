@@ -62,6 +62,21 @@ Reference steps for the template
 #. Update the ``cilium_version`` and ``cilium_tag`` variables in
    ``examples/getting-started/Vagrantfile``
 
+#. Set the right version for the ``CustomResourceDefinitionSchemaVersion`` in
+   the ``pkg/k8s/client`` by following these instructions:
+
+   Open the :ref:`k8scompatibility` and check the "CNP and CCNP Schema Version"
+   for the ``vX.Y`` branch, if you are doing a RC for a new minor version,
+   check the ``latest / master`` line.
+
+   Compare that schema version with the schema version set in the
+   ``CustomResourceDefinitionSchemaVersion`` variable, if they are different,
+   change the ``CustomResourceDefinitionSchemaVersion`` to be ``vX.Y.Z+1`` where
+   ``vX.Y.Z`` is the value read from the :ref:`k8scompatibility` table.
+
+   Add a new line in that table with the new Cilium version and the version
+   defined in the ``CustomResourceDefinitionSchemaVersion`` variable.
+
 #. Add all modified files using ``git add`` and create a commit with the
    title ``Prepare for release v1.0.3``.
 
