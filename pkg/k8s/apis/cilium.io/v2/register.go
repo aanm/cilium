@@ -34,10 +34,7 @@ const (
 	//
 	// Maintainers: bump minor for each Cilium minor version released and set
 	// patch to .1.
-	// Developers: bump patch for each change in the CRD schema. If this is
-	// master branch, update it in the
-	// Documentation/concepts/kubernetes/compatibility.rst for 'latest / master'
-	// line.
+	// Developers: bump patch for each change in the CRD schema.
 	CustomResourceDefinitionSchemaVersion = "1.22.3"
 
 	// CustomResourceDefinitionSchemaVersionKey is key to label which holds the CRD schema version
