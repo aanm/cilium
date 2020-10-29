@@ -49,9 +49,7 @@ On Freeze date
 #. Set the right version for the ``CustomResourceDefinitionSchemaVersion`` in
    the ``pkg/k8s/client`` by following these instructions:
 
-   Open the :ref:`k8scompatibility` and check the "CNP and CCNP Schema Version"
-   for the ``vX.Y`` branch, if you are doing a RC for a new minor version,
-   check the ``latest / master`` line.
+   Run ``./Documentation/check-compat-table.sh``, check
 
    Compare that schema version with the schema version set in the
    ``CustomResourceDefinitionSchemaVersion`` variable, if they are different,

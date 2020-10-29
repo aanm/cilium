@@ -4,7 +4,7 @@
 include ../Makefile.defs
 include ../Makefile.quiet
 
-.PHONY: default clean builder-image cmdref epub latex html run-server stop-server
+.PHONY: default clean builder-image cmdref epub latex html run-server stop-server k8s-compat-table
 
 default: html
 
@@ -28,6 +28,9 @@ update-cmdref: builder-image
 	@$(ECHO_GEN)cmdref
 	-$(QUIET)rm -rf cmdref/cilium*.md
 	$(QUIET)$(DOCKER_RUN) ./update-cmdref.sh
+
+k8s-compat-table:
+	./check-compat-table.sh
 
 check: builder-image update-cmdref
 	@$(ECHO_CHECK) cmdref
