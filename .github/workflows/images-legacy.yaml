@@ -21,8 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Login to DockerHub
@@ -38,7 +36,7 @@ jobs:
           password: ${{ secrets.QUAY_PASSWORD }}
       - name: Set output
         id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        run: echo ::set-output name=tag::pr-test-docker-images-legacy
       - name: Build Cilium
         id: docker_build_cilium
         uses: docker/build-push-action@v2
@@ -138,6 +136,7 @@ jobs:
       - name: Image digests
         run: |
           echo "::group::Image digests"
+          echo "Official Docker Image Repositories: docker.io, quay.io
           echo "Cilium: ${{ steps.docker_build_cilium.outputs.digest }}"
           echo "Cilium Operator: ${{ steps.docker_build_operator.outputs.digest }}"
           echo "Cilium Operator AWS: ${{ steps.docker_build_operator_aws.outputs.digest }}"
