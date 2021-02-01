@@ -17,6 +17,7 @@ on:
 
 jobs:
   multi-registries:
+    if: github.repository == 'cilium/cilium'
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -44,6 +45,8 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
+          cache-from: ${{ github.repository_owner }}/cilium-dev:cache-build-${{ steps.vars.outputs.tag }}
+          cache-to: mode=max,type=registry,ref=${{ github.repository_owner }}/cilium-dev:cache-build-${{ steps.vars.outputs.tag }}
           tags: |
             ${{ github.repository_owner }}/cilium-dev:${{ github.sha }}
             ${{ github.repository_owner }}/cilium-dev:${{ steps.vars.outputs.tag }}
@@ -56,6 +59,8 @@ jobs:
           context: .
           file: ./cilium-operator.Dockerfile
           push: true
+          cache-from: ${{ github.repository_owner }}/operator-dev:cache-build-${{ steps.vars.outputs.tag }}
+          cache-to: mode=max,type=registry,ref=${{ github.repository_owner }}/operator-dev:cache-build-${{ steps.vars.outputs.tag }}
           tags: |
             ${{ github.repository_owner }}/operator-dev:${{ github.sha }}
             ${{ github.repository_owner }}/operator-dev:${{ steps.vars.outputs.tag }}
@@ -68,6 +73,8 @@ jobs:
           context: .
           file: ./cilium-operator-aws.Dockerfile
           push: true
+          cache-from: ${{ github.repository_owner }}/operator-aws-dev:cache-build-${{ steps.vars.outputs.tag }}
+          cache-to: mode=max,type=registry,ref=${{ github.repository_owner }}/operator-aws-dev:cache-build-${{ steps.vars.outputs.tag }}
           tags: |
             ${{ github.repository_owner }}/operator-aws-dev:${{ github.sha }}
             ${{ github.repository_owner }}/operator-aws-dev:${{ steps.vars.outputs.tag }}
@@ -80,6 +87,8 @@ jobs:
           context: .
           file: ./cilium-operator-azure.Dockerfile
           push: true
+          cache-from: ${{ github.repository_owner }}/operator-azure-dev:cache-build-${{ steps.vars.outputs.tag }}
+          cache-to: mode=max,type=registry,ref=${{ github.repository_owner }}/operator-azure-dev:cache-build-${{ steps.vars.outputs.tag }}
           tags: |
             ${{ github.repository_owner }}/operator-azure-dev:${{ github.sha }}
             ${{ github.repository_owner }}/operator-azure-dev:${{ steps.vars.outputs.tag }}
@@ -92,6 +101,8 @@ jobs:
           context: .
           file: ./cilium-operator-generic.Dockerfile
           push: true
+          cache-from: ${{ github.repository_owner }}/operator-generic-dev:cache-build-${{ steps.vars.outputs.tag }}
+          cache-to: mode=max,type=registry,ref=${{ github.repository_owner }}/operator-generic-dev:cache-build-${{ steps.vars.outputs.tag }}
           tags: |
             ${{ github.repository_owner }}/operator-generic-dev:${{ github.sha }}
             ${{ github.repository_owner }}/operator-generic-dev:${{ steps.vars.outputs.tag }}
@@ -104,6 +115,8 @@ jobs:
           context: .
           file: ./hubble-relay.Dockerfile
           push: true
+          cache-from: ${{ github.repository_owner }}/hubble-relay-dev:cache-build-${{ steps.vars.outputs.tag }}
+          cache-to: mode=max,type=registry,ref=${{ github.repository_owner }}/hubble-relay-dev:cache-build-${{ steps.vars.outputs.tag }}
           tags: |
             ${{ github.repository_owner }}/hubble-relay-dev:${{ github.sha }}
             ${{ github.repository_owner }}/hubble-relay-dev:${{ steps.vars.outputs.tag }}
@@ -116,6 +129,8 @@ jobs:
           context: .
           file: ./clustermesh-apiserver.Dockerfile
           push: true
+          cache-from: ${{ github.repository_owner }}/clustermesh-apiserver-dev:cache-build-${{ steps.vars.outputs.tag }}
+          cache-to: mode=max,type=registry,ref=${{ github.repository_owner }}/clustermesh-apiserver-dev:cache-build-${{ steps.vars.outputs.tag }}
           tags: |
             ${{ github.repository_owner }}/clustermesh-apiserver-dev:${{ github.sha }}
             ${{ github.repository_owner }}/clustermesh-apiserver-dev:${{ steps.vars.outputs.tag }}
@@ -128,6 +143,8 @@ jobs:
           context: .
           file: ./cilium-docker-plugin.Dockerfile
           push: true
+          cache-from: ${{ github.repository_owner }}/docker-plugin-dev:cache-build-${{ steps.vars.outputs.tag }}
+          cache-to: mode=max,type=registry,ref=${{ github.repository_owner }}/docker-plugin-dev:cache-build-${{ steps.vars.outputs.tag }}
           tags: |
             ${{ github.repository_owner }}/docker-plugin-dev:${{ github.sha }}
             ${{ github.repository_owner }}/docker-plugin-dev:${{ steps.vars.outputs.tag }}
@@ -136,7 +153,7 @@ jobs:
       - name: Image digests
         run: |
           echo "::group::Image digests"
-          echo "Official Docker Image Repositories: docker.io, quay.io
+          echo "Official Docker Image Repositories: docker.io, quay.io"
           echo "Cilium: ${{ steps.docker_build_cilium.outputs.digest }}"
           echo "Cilium Operator: ${{ steps.docker_build_operator.outputs.digest }}"
           echo "Cilium Operator AWS: ${{ steps.docker_build_operator_aws.outputs.digest }}"
