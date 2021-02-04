@@ -21,7 +21,7 @@ and flexible. To learn more about eBPF, visit `eBPF.io`_.
 Stable Releases
 ===============
 
-The Cilium community maintains minor stable releases for the last three major
+The Cilium community maintains minor stable releases for the last three minor
 Cilium versions. Older Cilium stable versions from major releases prior to that
 are considered EOL.
 
