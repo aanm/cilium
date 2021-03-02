@@ -12,4 +12,10 @@ if [ "$#" -ne 1 ] ; then
   exit 1
 fi
 
-docker buildx imagetools inspect "${1}" 2>/dev/null | grep Digest | awk '{ print $2 }' || true
+inspect=$(docker buildx imagetools inspect "${1}" --raw 2>/dev/null | sha256sum | cut -d " " -f 1 )
+# shellcheck disable=SC2181
+if [ $? -eq 0 ]; then
+  echo "${inspect}"
+else
+  echo ""
+fi
