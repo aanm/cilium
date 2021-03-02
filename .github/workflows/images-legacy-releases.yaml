@@ -2,13 +2,12 @@ name: Image Release Build
 
 on:
   push:
-    tags:
-      - v[0-9]+.[0-9]+.[0-9]+
-      - v[0-9]+.[0-9]+.[0-9]+-rc[0-9]+
+    branches:
+      - pr/fixing-helm-master
 
 jobs:
   build-and-push:
-    if: ${{ github.repository == 'cilium/cilium' }}
+    if: ${{ github.repository == 'aanm/cilium' }}
     environment: release
     runs-on: ubuntu-20.04
     strategy:
@@ -42,18 +41,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@154c24e1f33dbb5865a021c99f1318cfebf27b32 # v1.1.1
 
-      - name: Login to DockerHub
-        uses: docker/login-action@f3364599c6aa293cdc2b8391b1b56d0c30e45c8a # v1.8.0
-        with:
-          username: ${{ secrets.DOCKER_HUB_RELEASE_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_RELEASE_PASSWORD }}
-
       - name: Login to quay.io
         uses: docker/login-action@f3364599c6aa293cdc2b8391b1b56d0c30e45c8a # v1.8.0
         with:
           registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME_RELEASE_USERNAME }}
-          password: ${{ secrets.QUAY_PASSWORD_RELEASE_PASSWORD }}
+          username: ${{ secrets.QUAY_USERNAME_CI }}
+          password: ${{ secrets.QUAY_PASSWORD_CI }}
 
       - name: Getting image tag
         id: tag
@@ -72,8 +65,6 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ github.repository_owner }}/${{ matrix.name }}:${{ steps.tag.outputs.tag }}
-            quay.io/${{ github.repository_owner }}/${{ matrix.name }}:${{ steps.tag.outputs.tag }}
             quay.io/${{ github.repository_owner }}/${{ matrix.name }}-ci:${{ github.sha }}
 
       - name: Image Release Digest
@@ -100,7 +91,7 @@ jobs:
           retention-days: 1
 
   image-digests:
-    if: ${{ github.repository == 'cilium/cilium' }}
+    if: ${{ github.repository == 'aanm/cilium' }}
     name: Display Digests
     runs-on: ubuntu-20.04
     needs: build-and-push
