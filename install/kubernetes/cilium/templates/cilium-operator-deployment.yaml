@@ -159,11 +159,23 @@ spec:
           value: {{ $value }}
 {{- end }}
 {{- if .Values.eni.enabled }}
+{{- if .Values.operator.image.useSHA }}
+        image: {{ .Values.operator.image.repository }}-aws{{ .Values.operator.image.suffix }}:{{ .Values.operator.image.tag }}@{{ .Values.operator.image.awsSHA }}
+{{ else }}
         image: {{ .Values.operator.image.repository }}-aws{{ .Values.operator.image.suffix }}:{{ .Values.operator.image.tag }}
+{{- end }}
 {{- else if .Values.azure.enabled }}
+{{- if .Values.operator.image.useSHA }}
+        image: {{ .Values.operator.image.repository }}-azure{{ .Values.operator.image.suffix }}:{{ .Values.operator.image.tag }}@{{ .Values.operator.image.azureSHA }}
+{{ else }}
         image: {{ .Values.operator.image.repository }}-azure{{ .Values.operator.image.suffix }}:{{ .Values.operator.image.tag }}
+{{- end }}
 {{- else }}
+{{- if .Values.operator.image.useSHA }}
+        image: {{ .Values.operator.image.repository }}-generic{{ .Values.operator.image.suffix }}:{{ .Values.operator.image.tag }}@{{ .Values.operator.image.genericSHA }}
+{{ else }}
         image: {{ .Values.operator.image.repository }}-generic{{ .Values.operator.image.suffix }}:{{ .Values.operator.image.tag }}
+{{- end }}
 {{- end }}
         imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
         name: cilium-operator

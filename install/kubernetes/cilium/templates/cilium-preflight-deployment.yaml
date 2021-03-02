@@ -40,7 +40,11 @@ spec:
       containers:
 {{- if .Values.preflight.validateCNPs }}
         - name: cnp-validator
+{{- if .Values.preflight.image.useSHA }}
+          image: {{ .Values.preflight.image.repository }}:{{ .Values.preflight.image.tag }}@{{ .Values.preflight.image.sha }}
+{{ else }}
           image: {{ .Values.preflight.image.repository }}:{{ .Values.preflight.image.tag }}
+{{- end }}
           imagePullPolicy: {{ .Values.preflight.image.pullPolicy }}
           command: ["/bin/sh"]
           args:

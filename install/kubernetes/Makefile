@@ -1,7 +1,7 @@
-# Copyright 2017-2019 Authors of Cilium
+# Copyright 2017-2021 Authors of Cilium
 # SPDX-License-Identifier: Apache-2.0
 
-include ../../Makefile.defs
+include Makefile.imageshas ../../Makefile.defs
 
 HUBBLE_PROXY_VERSION := "v1.14.5"
 HUBBLE_UI_VERSION := "v0.7.3"
@@ -89,16 +89,19 @@ update-versions:
 		branch="$$cilium_version";											\
 		hubble_version=$(HUBBLE_UI_VERSION);										\
 		pull_policy="IfNotPresent";											\
+		use_sha="true";													\
 		if echo "$(VERSION)" | grep -q $(LATEST_VERSION_REGEX); then							\
 			cilium_version="latest";										\
 			branch="master";											\
 			hubble_version="latest";										\
 			pull_policy="Always";											\
+		    use_sha="false";												\
 		elif echo "$(VERSION)" | grep -q $(DEV_VERSION_REGEX); then							\
 			cilium_version="v$(subst -dev,,$(VERSION))";								\
 			branch="$$cilium_version";										\
 			hubble_version="$(HUBBLE_UI_VERSION)";									\
 			pull_policy="Always";											\
+		    use_sha="false";												\
 		fi;														\
 		sed -i 's;icon:.*;icon: $(LOGO_BASE_URL)/cilium@'$$branch'/$(LOGO_PATH);' $(CHART_FILE);			\
 		# image.tag operator.image.tag preflight.image.tag hubble.relay.image.tag;					\
@@ -108,14 +111,23 @@ update-versions:
 		# etcd.image.tag												\
 		sed -i '/repository.*etcd-operator.*/{!b;n;s/tag.*/tag: '$(MANAGED_ETCD_VERSION)'/}' $(CILIUM_VALUES)		\
 		# clustermesh.apiserver.etcd.image.tag										\
-		sed -i '/repository.*etcd$$/{!b;n;s/tag.*/tag: '$(ETCD_VERSION)'/}' $(CILIUM_VALUES)			\
+		sed -i '/repository.*etcd$$/{!b;n;s/tag.*/tag: '$(ETCD_VERSION)'/}' $(CILIUM_VALUES)				\
 		# hubble.ui.proxy.image.tag											\
 		sed -i '/repository.*envoy.*/{!b;n;s/tag.*/tag: '$(HUBBLE_PROXY_VERSION)'/}' $(CILIUM_VALUES)			\
 		# nodeinit.image.tag												\
 		sed -i '/repository.*cilium\/startup-script.*/{!b;n;s/tag.*/tag: '$(NODEINIT_VERSION)'/}' $(CILIUM_VALUES)	\
 		# certgen.image.tag												\
 		sed -i '/repository.*certgen.*/{!b;n;s/tag.*/tag: '$(CERTGEN_VERSION)'/}' $(CILIUM_VALUES);			\
-		sed -i 's/'$(CILIUM_PULLPOLICY_REGEX)'/\1 '$$pull_policy'/' $(CILIUM_VALUES);
+		sed -i 's/'$(CILIUM_PULLPOLICY_REGEX)'/\1 '$$pull_policy'/' $(CILIUM_VALUES);  					\
+		sed -i 's/useSHA:.*/useSHA: '$$use_sha'/' $(CILIUM_VALUES);  							\
+		# image SHAs;													\
+		sed -i '/# cilium-sha.*/{!b;n;s/sha.*/sha: "'$(CILIUM_SHA)'"/}' $(CILIUM_VALUES); 				\
+		sed -i '/# hubble-relay-sha.*/{!b;n;s/sha.*/sha: "'$(HUBBLE_RELAY_SHA)'"/}' $(CILIUM_VALUES);			\
+		sed -i '/# operator-aws-sha.*/{!b;n;s/awsSHA.*/awsSHA: "'$(OPERATOR_AWS_SHA)'"/}' $(CILIUM_VALUES); 		\
+		sed -i '/# operator-azure-sha.*/{!b;n;s/azureSHA.*/azureSHA: "'$(OPERATOR_AZURE_SHA)'"/}' $(CILIUM_VALUES); 	\
+		sed -i '/# operator-generic-sha.*/{!b;n;s/genericSHA.*/genericSHA: "'$(OPERATOR_GENERIC_SHA)'"/}' $(CILIUM_VALUES); \
+		sed -i '/# operator-legacy-sha.*/{!b;n;s/legacySHA.*/legacySHA: "'$(OPERATOR_SHA)'"/}' $(CILIUM_VALUES); \
+		sed -i '/# clustermesh-apiserver-sha.*/{!b;n;s/sha.*/sha: "'$(CLUSTERMESH_APISERVER_SHA)'"/}' $(CILIUM_VALUES)
 
 lint:
 	$(QUIET)helm lint --with-subcharts --values ./cilium/values.yaml ./cilium

@@ -28,14 +28,22 @@ spec:
 {{- end }}
       initContainers:
         - name: clean-cilium-state
+{{- if .Values.preflight.image.useSHA }}
+          image: {{ .Values.preflight.image.repository }}:{{ .Values.preflight.image.tag }}@{{ .Values.preflight.image.sha }}
+{{ else }}
           image: {{ .Values.preflight.image.repository }}:{{ .Values.preflight.image.tag }}
+{{- end }}
           imagePullPolicy: {{ .Values.preflight.image.pullPolicy }}
           command: ["/bin/echo"]
           args:
           - "hello"
       containers:
         - name: cilium-pre-flight-check
+{{- if .Values.preflight.image.useSHA }}
+          image: {{ .Values.preflight.image.repository }}:{{ .Values.preflight.image.tag }}@{{ .Values.preflight.image.sha }}
+{{ else }}
           image: {{ .Values.preflight.image.repository }}:{{ .Values.preflight.image.tag }}
+{{- end }}
           imagePullPolicy: {{ .Values.preflight.image.pullPolicy }}
           command: ["/bin/sh"]
           args:
@@ -71,7 +79,11 @@ spec:
 
 {{- if ne .Values.preflight.tofqdnsPreCache "" }}
         - name: cilium-pre-flight-fqdn-precache
+{{- if .Values.preflight.image.useSHA }}
+          image: {{ .Values.preflight.image.repository }}:{{ .Values.preflight.image.tag }}@{{ .Values.preflight.image.sha }}
+{{ else }}
           image: {{ .Values.preflight.image.repository }}:{{ .Values.preflight.image.tag }}
+{{- end }}
           imagePullPolicy: {{ .Values.preflight.image.pullPolicy }}
           name: cilium-pre-flight-fqdn-precache
           command: ["/bin/sh"]

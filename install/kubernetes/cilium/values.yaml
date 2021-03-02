@@ -85,6 +85,9 @@ image:
   repository: quay.io/cilium/cilium
   tag: latest
   pullPolicy: Always
+  # cilium-sha
+  sha: ""
+  useSHA: false
 
 # -- Pod affinity for cilium-agent.
 affinity:
@@ -607,6 +610,9 @@ hubble:
     image:
       repository: quay.io/cilium/hubble-relay
       tag: latest
+       # hubble-relay-sha
+      sha: ""
+      useSHA: false
       pullPolicy: Always
 
     # -- Specifies the resources for the hubble-relay pods
@@ -1133,6 +1139,15 @@ operator:
   image:
     repository: quay.io/cilium/operator
     tag: latest
+    # operator-legacy-sha
+    legacySHA: ""
+    # operator-generic-sha
+    genericSHA: ""
+    # operator-azure-sha
+    azureSHA: ""
+    # operator-aws-sha
+    awsSHA: ""
+    useSHA: false
     pullPolicy: Always
     suffix: ""
 
@@ -1338,6 +1353,9 @@ preflight:
   image:
     repository: quay.io/cilium/cilium
     tag: latest
+    # cilium-sha
+    sha: ""
+    useSHA: false
     pullPolicy: Always
 
   priorityClassName: ""
@@ -1444,6 +1462,9 @@ clustermesh:
     image:
       repository: quay.io/cilium/clustermesh-apiserver
       tag: latest
+      # clustermesh-apiserver-sha
+      sha: ""
+      useSHA: false
       pullPolicy: Always
 
     etcd:

@@ -48,7 +48,11 @@ spec:
 {{- end }}
       containers:
         - name: hubble-relay
+{{- if .Values.hubble.relay.image.useSHA }}
+          image: {{ .Values.hubble.relay.image.repository }}:{{ .Values.hubble.relay.image.tag }}@{{ .Values.hubble.relay.image.sha }}
+{{ else }}
           image: {{ .Values.hubble.relay.image.repository }}:{{ .Values.hubble.relay.image.tag }}
+{{- end }}
           imagePullPolicy: {{ .Values.hubble.relay.image.pullPolicy }}
           command:
             - hubble-relay
