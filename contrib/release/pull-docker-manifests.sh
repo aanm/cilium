@@ -7,11 +7,12 @@ source "${DIR}/lib/common.sh"
 
 CONTAINER_ENGINE=${CONTAINER_ENGINE:-docker}
 
-repo="cilium/cilium"
+repo="aanm/cilium"
 
 usage() {
-    logecho "usage: $0 <GH-USERNAME> <RUN-URL>"
+    logecho "usage: $0 <GH-USERNAME> <VERSION> <RUN-URL>"
     logecho "GH-USERNAME  GitHub username"
+    logecho "VERSION      Target version"
     logecho "RUN-URL      GitHub URL with the RUN for the release images"
     logecho "             example: https://github.com/cilium/cilium/actions/runs/600920964"
     logecho "GITHUB_TOKEN environment variable set with the scope public:repo"
@@ -20,7 +21,7 @@ usage() {
 }
 
 handle_args() {
-    if ! common::argc_validate 3; then
+    if ! common::argc_validate 4; then
         usage 2>&1
         common::exit 1
     fi
@@ -28,6 +29,11 @@ handle_args() {
     if [[ "$1" = "--help" ]] || [[ "$1" = "-h" ]]; then
         usage
         common::exit 0
+    fi
+
+    if ! echo "$2" | grep -q "[0-9]\+\.[0-9]\+\.[0-9]\+"; then
+        usage 2>&1
+        common::exit 1 "Invalid VERSION ARG \"$2\"; Expected X.Y.Z"
     fi
 
     if [ -z "${GITHUB_TOKEN}" ]; then
@@ -41,12 +47,13 @@ get_digest_output() {
 
     username=${1}
     run_id="${2}"
-    file="${3}"
+    version="${3}"
+    file="${4}"
     tmp_dir=$(mktemp -d)
-
+    set -o xtrace
     archive_download_url=$(curl -SslH "Accept: application/vnd.github.v3+json" \
       "https://api.github.com/repos/${repo}/actions/runs/${run_id}/artifacts" \
-      2>/dev/null | jq -r ".artifacts[] | select(.name == \"${file}\") | .archive_download_url")
+      2>/dev/null | jq -r ".artifacts[] | select(.name == \"${file}-${version}\") | .archive_download_url")
     archive_download_url_zip=$(curl -SslH "Accept: application/vnd.github.v3+json" \
       -i -u "${username}:${GITHUB_TOKEN}" \
       "${archive_download_url}" 2>/dev/null | tr -d '\r' | grep -E '^location:\.*' | sed 's/location:\ //g')
@@ -57,11 +64,12 @@ get_digest_output() {
 
 main() {
     handle_args "$@"
-    local username run_url_id
+    local username version run_url_id
     username="${1}"
-    run_url_id="$(basename ${2})"
+    version="${2}"
+    run_url_id="$(basename "${3}")"
 
-    makefile_digest=$(get_digest_output "${username}" "${run_url_id}" Makefile.imageshas)
+    makefile_digest=$(get_digest_output "${username}" "${run_url_id}" "${version}" Makefile.imageshas)
     >&2 echo "Adding image SHAs to install/kubernetes/Makefile.imageshas"
     >&2 echo ""
     cp "${makefile_digest}" "${DIR}/../../install/kubernetes/Makefile.imageshas"
@@ -70,7 +78,7 @@ main() {
     >&2 echo ""
     echo "Docker Manifests"
     echo "----------------"
-    image_digest_output=$(get_digest_output "${username}" "${run_url_id}"  image-digest-output.txt)
+    image_digest_output=$(get_digest_output "${username}" "${run_url_id}" "${version}" image-digest-output.txt)
     cat "${image_digest_output}"
 }
 
