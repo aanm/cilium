@@ -33,15 +33,16 @@ assignees: ''
 - [ ] Merge PR
 - [ ] Create and push *both* tags to GitHub (`vX.Y.Z`, `X.Y.Z`)
   - Pull latest branch locally and run `contrib/release/tag-release.sh`
-- [ ] Ask a maintainer to approve the build in the following links:
+- [ ] Ask a maintainer to approve the build in the following links (keep the URL of the GitHub run):
   - [Cilium v1.10](https://github.com/cilium/cilium/actions?query=workflow:%22Image+Release+Build%22)
   - [Cilium v1.9](https://github.com/cilium/cilium/actions?query=workflow:%22Image+Release+Build+v1.9%22)
   - [Cilium v1.8](https://github.com/cilium/cilium/actions?query=workflow:%22Image+Release+Build+v1.8%22)
   - [Cilium v1.7](https://github.com/cilium/cilium/actions?query=workflow:%22Image+Release+Build+v1.7%22)
   - Check if all docker images are available before announcing the release
     `make -C install/kubernetes/ check-docker-images`
-- [ ] Get the image digests from the build process (click in the GH Run > "Display Digests"),
-      update the digests in the helm charts locally and make a commit / PR with the digests.
+- [ ] Get the image digests from the build process make a commit / PR with the digests.
+    - [ ] Run `contrib/release/pull-docker-manifests.sh` to fetch the image
+          digests, use the URL of the GitHub run here.
 - [ ] Create helm charts artifacts in [Cilium charts] repository using
       [cilium helm release tool] for both the `vX.Y.Z` release and `vX.Y` branch
       & push to repository
