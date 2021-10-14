@@ -1,0 +1,22 @@
+name: Scruffy
+on:
+  workflow_dispatch:
+  schedule:
+    # Run the GC every monday at 9am
+    - cron: "0 9 * * 1"
+
+permissions: read-all
+
+jobs:
+  scruffy:
+    # if: github.repository == '<my-org>/<my-repo>'
+    name: scruffy
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: docker://quay.io/cilium/scruffy:v0.0.1
+        with:
+          entrypoint: scruffy
+          args: --git-repository=./ --repositories=operator-ci
+        env:
+          QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
