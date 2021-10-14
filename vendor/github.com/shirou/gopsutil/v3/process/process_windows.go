@@ -40,7 +40,7 @@ var (
 	processorArchitecture uint
 )
 
-const processQueryInformation = windows.PROCESS_QUERY_LIMITED_INFORMATION | windows.PROCESS_QUERY_INFORMATION // WinXP doesn't know PROCESS_QUERY_LIMITED_INFORMATION
+const processQueryInformation = windows.PROCESS_QUERY_LIMITED_INFORMATION
 
 type systemProcessorInformation struct {
 	ProcessorArchitecture uint16
@@ -650,7 +650,10 @@ func (p *Process) TerminateWithContext(ctx context.Context) error {
 }
 
 func (p *Process) KillWithContext(ctx context.Context) error {
-	process := os.Process{Pid: int(p.Pid)}
+	process, err := os.FindProcess(int(p.Pid))
+	if err != nil {
+		return err
+	}
 	return process.Kill()
 }
 
