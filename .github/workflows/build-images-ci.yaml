@@ -10,6 +10,7 @@ on:
   push:
     branches:
       - master
+      - pr/add-gh-cache-build
 
 permissions: read-all
 
@@ -19,34 +20,12 @@ concurrency:
 
 jobs:
   build-and-push-prs:
-    if: ${{ github.repository == 'cilium/cilium' }}
     runs-on: ubuntu-20.04
     strategy:
       matrix:
         include:
-          - name: cilium
-            dockerfile: ./images/cilium/Dockerfile
-
-          - name: operator-aws
-            dockerfile: ./images/operator/Dockerfile
-
-          - name: operator-azure
-            dockerfile: ./images/operator/Dockerfile
-
-          - name: operator-alibabacloud
-            dockerfile: ./images/operator/Dockerfile
-
           - name: operator-generic
             dockerfile: ./images/operator/Dockerfile
-
-          - name: hubble-relay
-            dockerfile: ./images/hubble-relay/Dockerfile
-
-          - name: clustermesh-apiserver
-            dockerfile: ./images/clustermesh-apiserver/Dockerfile
-
-          - name: docker-plugin
-            dockerfile: ./images/cilium-docker-plugin/Dockerfile
 
     steps:
       - name: Set up Docker Buildx
@@ -74,6 +53,12 @@ jobs:
           persist-credentials: false
           ref: ${{ steps.tag.outputs.tag }}
 
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-master-buildx
+
       # master branch pushes
       - name: CI Build ${{ matrix.name }}
         if: ${{ github.event_name != 'pull_request_target' }}
@@ -89,6 +74,8 @@ jobs:
             quay.io/${{ github.repository_owner }}/${{ matrix.name }}-ci:${{ steps.tag.outputs.tag }}
           build-args: |
             OPERATOR_VARIANT=${{ matrix.name }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: CI race detection Build ${{ matrix.name }}
         if: ${{ github.event_name != 'pull_request_target' }}
@@ -107,6 +94,8 @@ jobs:
             LOCKDEBUG=1
             RACE=1
             OPERATOR_VARIANT=${{ matrix.name }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: CI Image Releases digests
         if: ${{ github.event_name != 'pull_request_target' }}
@@ -132,6 +121,7 @@ jobs:
             quay.io/${{ github.repository_owner }}/${{ matrix.name }}-ci:${{ steps.tag.outputs.tag }}
           build-args: |
             OPERATOR_VARIANT=${{ matrix.name }}
+          cache-from: type=local,src=/tmp/.buildx-cache
 
       - name: CI Image Releases digests
         if: ${{ github.event_name == 'pull_request_target' }}
@@ -156,6 +146,7 @@ jobs:
             LOCKDEBUG=1
             RACE=1
             OPERATOR_VARIANT=${{ matrix.name }}
+          cache-from: type=local,src=/tmp/.buildx-cache
 
       - name: CI Image Releases digests
         if: ${{ github.event_name == 'pull_request_target' }}
@@ -173,81 +164,11 @@ jobs:
           path: image-digest
           retention-days: 1
 
-  # we need to build cilium-test separately
-  # this is caused by running apt while building the image
-  # which requires qemu setup in order to avoid x86/arm64 binaries mixups
-  # note: we only build on pushes to master branch
-  build-and-push-with-qemu:
-    if: ${{ github.repository == 'cilium/cilium' && github.event_name == 'push' }}
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        include:
-          - name: cilium-test
-            dockerfile: ./images/cilium-test/Dockerfile
-
-    steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@27d0a4f181a40b142cce983c5393082c365d1480
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25
-
-      - name: Login to quay.io for CI
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-        with:
-          registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME_CI }}
-          password: ${{ secrets.QUAY_PASSWORD_CI }}
-
-      - name: Checkout Source Code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
-        with:
-          persist-credentials: false
-          ref: ${{ github.sha }}
-
-      - name: CI Build ${{ matrix.name }}
-        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
-        id: docker_build_ci_master
-        with:
-          context: .
-          file: ${{ matrix.dockerfile }}
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: |
-            quay.io/${{ github.repository_owner }}/${{ matrix.name }}-ci:latest
-            quay.io/${{ github.repository_owner }}/${{ matrix.name }}-ci:${{ github.sha }}
-
-      - name: CI Image Releases digests
-        shell: bash
-        run: |
-          mkdir -p image-digest/
-          echo "quay.io/${{ github.repository_owner }}/${{ matrix.name }}-ci:latest@${{ steps.docker_build_ci_master.outputs.digest }}" > image-digest/${{ matrix.name }}.txt
-          echo "quay.io/${{ github.repository_owner }}/${{ matrix.name }}-ci:${{ github.sha }}@${{ steps.docker_build_ci_master.outputs.digest }}" >> image-digest/${{ matrix.name }}.txt
-
-      # Upload artifact digests
-      - name: Upload artifact digests
-        uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074
-        with:
-          name: image-digest ${{ matrix.name }}
-          path: image-digest
-          retention-days: 1
-
-      - name: Send slack notification
-        if: ${{ !success() && (github.event_name == 'schedule' || github.event_name == 'push') }}
-        uses: 8398a7/action-slack@c84a35cfa82a01f3733a3cbf5d5260123e55c2f9
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
   image-digests:
-    if: ${{ always() && github.repository == 'cilium/cilium' &&
-      (needs.build-and-push-with-qemu.result == 'success' || needs.build-and-push-with-qemu.result == 'skipped') }}
+    if: ${{ always()  }}
     name: Display Digests
     runs-on: ubuntu-20.04
-    needs: [build-and-push-prs, build-and-push-with-qemu]
+    needs: [build-and-push-prs]
     steps:
       - name: Downloading Image Digests
         shell: bash
