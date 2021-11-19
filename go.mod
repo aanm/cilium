@@ -3,7 +3,7 @@ module github.com/cilium/cilium
 go 1.17
 
 require (
-	github.com/Azure/azure-sdk-for-go v59.2.0+incompatible
+	github.com/Azure/azure-sdk-for-go v59.3.0+incompatible
 	github.com/Azure/go-autorest/autorest v0.11.22
 	github.com/Azure/go-autorest/autorest/adal v0.9.17
 	github.com/Azure/go-autorest/autorest/azure/auth v0.5.9
@@ -13,7 +13,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.11.0
 	github.com/aws/aws-sdk-go-v2/config v1.10.0
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.8.0
-	github.com/aws/aws-sdk-go-v2/service/ec2 v1.21.0
+	github.com/aws/aws-sdk-go-v2/service/ec2 v1.22.0
 	github.com/aws/smithy-go v1.9.0
 	github.com/blang/semver/v4 v4.0.0
 	github.com/cilium/customvet v0.0.0-20201209211516-9852765c1ac4
