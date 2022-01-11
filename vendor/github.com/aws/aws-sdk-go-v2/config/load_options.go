@@ -31,8 +31,18 @@ type LoadOptions struct {
 	HTTPClient HTTPClient
 
 	// EndpointResolver that can be used to provide or override an endpoint for the given
-	// service and region Please see the `aws.EndpointResolver` documentation on usage.
+	// service and region.
+	//
+	// See the `aws.EndpointResolver` documentation on usage.
+	//
+	// Deprecated: See EndpointResolverWithOptions
 	EndpointResolver aws.EndpointResolver
+
+	// EndpointResolverWithOptions that can be used to provide or override an endpoint for the given
+	// service and region.
+	//
+	// See the `aws.EndpointResolverWithOptions` documentation on usage.
+	EndpointResolverWithOptions aws.EndpointResolverWithOptions
 
 	// Retryer is a function that provides a Retryer implementation. A Retryer guides how HTTP requests should be
 	// retried in case of recoverable failures.
@@ -90,6 +100,10 @@ type LoadOptions struct {
 	// UseEC2IMDSRegion indicates if SDK should retrieve the region
 	// from the EC2 Metadata service
 	UseEC2IMDSRegion *UseEC2IMDSRegion
+
+	// CredentialsCacheOptions is a function for setting the
+	// aws.CredentialsCacheOptions
+	CredentialsCacheOptions func(*aws.CredentialsCacheOptions)
 
 	// ProcessCredentialOptions is a function for setting
 	// the processcreds.Options
@@ -355,6 +369,29 @@ func WithCredentialsProvider(v aws.CredentialsProvider) LoadOptionsFunc {
 	}
 }
 
+// getCredentialsCacheOptionsProvider returns the wrapped function to set aws.CredentialsCacheOptions
+func (o LoadOptions) getCredentialsCacheOptions(ctx context.Context) (func(*aws.CredentialsCacheOptions), bool, error) {
+	if o.CredentialsCacheOptions == nil {
+		return nil, false, nil
+	}
+
+	return o.CredentialsCacheOptions, true, nil
+}
+
+// WithCredentialsCacheOptions is a helper function to construct functional
+// options that sets a function to modify the aws.CredentialsCacheOptions the
+// aws.CredentialsCache will be configured with, if the CredentialsCache is used
+// by the configuration loader.
+//
+// If multiple WithCredentialsCacheOptions calls are made, the last call
+// overrides the previous call values.
+func WithCredentialsCacheOptions(v func(*aws.CredentialsCacheOptions)) LoadOptionsFunc {
+	return func(o *LoadOptions) error {
+		o.CredentialsCacheOptions = v
+		return nil
+	}
+}
+
 // getProcessCredentialOptions returns the wrapped function to set processcreds.Options
 func (o LoadOptions) getProcessCredentialOptions(ctx context.Context) (func(*processcreds.Options), bool, error) {
 	if o.ProcessCredentialOptions == nil {
@@ -533,12 +570,33 @@ func (o LoadOptions) getEndpointResolver(ctx context.Context) (aws.EndpointResol
 }
 
 // WithEndpointResolver is a helper function to construct functional options
-// that sets endpoint resolver on LoadOptions. The EndpointResolver is set to nil,
+// that sets the EndpointResolver on LoadOptions. If the EndpointResolver is set to nil,
 // the EndpointResolver value is ignored. If multiple WithEndpointResolver calls
 // are made, the last call overrides the previous call values.
+//
+// Deprecated: See WithEndpointResolverWithOptions
 func WithEndpointResolver(v aws.EndpointResolver) LoadOptionsFunc {
 	return func(o *LoadOptions) error {
 		o.EndpointResolver = v
+		return nil
+	}
+}
+
+func (o LoadOptions) getEndpointResolverWithOptions(ctx context.Context) (aws.EndpointResolverWithOptions, bool, error) {
+	if o.EndpointResolverWithOptions == nil {
+		return nil, false, nil
+	}
+
+	return o.EndpointResolverWithOptions, true, nil
+}
+
+// WithEndpointResolverWithOptions is a helper function to construct functional options
+// that sets the EndpointResolverWithOptions on LoadOptions. If the EndpointResolverWithOptions is set to nil,
+// the EndpointResolver value is ignored. If multiple WithEndpointResolver calls
+// are made, the last call overrides the previous call values.
+func WithEndpointResolverWithOptions(v aws.EndpointResolverWithOptions) LoadOptionsFunc {
+	return func(o *LoadOptions) error {
+		o.EndpointResolverWithOptions = v
 		return nil
 	}
 }
