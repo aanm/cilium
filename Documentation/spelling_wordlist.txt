@@ -1,10 +1,10 @@
 ACK
 AKS
-Anthos
 APIEndpoint
 AdapterLimitViaAPI
 Alemayhu
 Alibaba
+Anthos
 BPF
 Bertin
 Blanco
@@ -89,7 +89,6 @@ MaskSize
 Mbit
 Mellanox
 Menlo
-mentees
 Mesos
 MiB
 Minikube
@@ -150,6 +149,7 @@ allocator
 allocators
 amd
 analytics
+annotateK
 ansible
 api
 apiKeys
@@ -604,6 +604,7 @@ mediabot
 memcache
 memcached
 memcd
+mentees
 metadata
 metricsServer
 microk
@@ -771,6 +772,7 @@ runPath
 runtime
 runtimes
 sEventHandover
+sNode
 sNodes
 sService
 sServiceHost
