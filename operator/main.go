@@ -488,6 +488,12 @@ func onOperatorStartLeading(ctx context.Context) {
 		startKvstoreWatchdog()
 	}
 
+	if k8s.IsEnabled() &&
+		(operatorOption.Config.RemoveCiliumNodeTaints || operatorOption.Config.SetCiliumIsUpCondition) {
+		stopCh := make(chan struct{})
+		operatorWatchers.HandleNodeTolerationAndTaints(stopCh)
+	}
+
 	if err := startSynchronizingCiliumNodes(ctx, nodeManager, withKVStore); err != nil {
 		log.WithError(err).Fatal("Unable to setup node watcher")
 	}

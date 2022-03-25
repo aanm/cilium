@@ -1555,6 +1555,14 @@ operator:
   # -- Skip CRDs creation for cilium-operator
   skipCRDCreation: false
 
+  # -- Remove Cilium node taint from Kubernetes nodes that have a healthy Cilium
+  # pod running
+  removeNodeTaints: true
+
+  # -- Set Node condition NetworkUnavailable to 'false' with the reason
+  # 'CiliumIsUp' for nodes that have a healthy Cilium pod.
+  setNodeNetworkStatus: true
+
 nodeinit:
   # -- Enable the node initialization DaemonSet
   enabled: false

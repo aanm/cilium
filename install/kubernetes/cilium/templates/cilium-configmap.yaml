@@ -826,6 +826,13 @@ data:
   annotate-k8s-node: "true"
 {{- end }}
 
+{{- if .Values.operator.removeNodeTaints }}
+  remove-cilium-node-taints: "true"
+{{- end }}
+{{- if .Values.operator.setNodeNetworkStatus }}
+  set-cilium-is-up-condition: "true"
+{{- end }}
+
 {{- if .Values.extraConfig }}
   {{ toYaml .Values.extraConfig | nindent 2 }}
 {{- end }}

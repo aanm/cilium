@@ -15,6 +15,21 @@ rules:
   - list
   - watch
   - delete
+{{- if or .Values.operator.removeNodeTaints .Values.operator.setNodeNetworkStatus }}
+- apiGroups:
+  - ""
+  resources:
+{{- if .Values.operator.removeNodeTaints }}
+  # To remove node taints
+  - nodes
+{{- end }}
+{{- if .Values.operator.setNodeNetworkStatus }}
+  # To set NetworkUnavailable false on startup
+  - nodes/status
+{{- end }}
+  verbs:
+  - patch
+{{- end }}
 - apiGroups:
   - discovery.k8s.io
   resources:
