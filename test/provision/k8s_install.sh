@@ -98,7 +98,7 @@ retry_function "wget https://packages.cloud.google.com/apt/doc/apt-key.gpg"
 apt-key add apt-key.gpg
 
 case $K8S_VERSION in
-    "1.24")
+    "1.24" | "1.25")
         KUBEADM_CRI_SOCKET="unix:///run/containerd/containerd.sock"
         ;;
 esac
@@ -459,6 +459,22 @@ case $K8S_VERSION in
         CONTROLLER_FEATURE_GATES="EndpointSlice=true,EndpointSliceTerminatingCondition=true"
         API_SERVER_FEATURE_GATES="EndpointSlice=true,EndpointSliceTerminatingCondition=true"
         ;;
+    "1.25")
+        # kubeadm 1.24 requires conntrack to be installed, we can remove this
+        # once we have upgraded the VM image version.
+        sudo apt-get install -y conntrack
+        # We don't need to define dthe kubernetes CNI version once we have stable
+        # releases.
+        # KUBERNETES_CNI_VERSION="0.8.7"
+        KUBERNETES_CNI_OS="-linux"
+        K8S_FULL_VERSION="1.25.0"
+        KUBEADM_OPTIONS="--ignore-preflight-errors=cri,swap"
+        KUBEADM_WORKER_OPTIONS="--config=/tmp/config.yaml"
+        sudo ln -sf $COREDNS_DEPLOYMENT $DNS_DEPLOYMENT
+        KUBEADM_CONFIG="${KUBEADM_CONFIG_V1BETA4}"
+        CONTROLLER_FEATURE_GATES="EndpointSliceTerminatingCondition=true"
+        API_SERVER_FEATURE_GATES="EndpointSliceTerminatingCondition=true"
+        ;;
 esac
 
 if [ "$KUBEPROXY" == "0" ]; then
@@ -467,23 +483,16 @@ fi
 
 #Install kubernetes
 set +e
-case $K8S_VERSION in
-    "1.16"|"1.17"|"1.18"|"1.19"|"1.20"|"1.21"|"1.22"|"1.23"|"1.24")
-        install_k8s_using_packages \
-            kubernetes-cni=${KUBERNETES_CNI_VERSION}* \
-            kubelet=${K8S_FULL_VERSION}* \
-            kubeadm=${K8S_FULL_VERSION}* \
-            kubectl=${K8S_FULL_VERSION}*
-        if [ $? -ne 0 ]; then
-            echo "falling back on binary k8s install"
-            set -e
-            install_k8s_using_binary "v${K8S_FULL_VERSION}" "v${KUBERNETES_CNI_VERSION}" "${KUBERNETES_CNI_OS}"
-        fi
-        ;;
-#   "1.21")
-#       install_k8s_using_binary "v${K8S_FULL_VERSION}" "v${KUBERNETES_CNI_VERSION}" "${KUBERNETES_CNI_OS}"
-#       ;;
-esac
+install_k8s_using_packages \
+    kubernetes-cni=${KUBERNETES_CNI_VERSION}* \
+    kubelet=${K8S_FULL_VERSION}* \
+    kubeadm=${K8S_FULL_VERSION}* \
+    kubectl=${K8S_FULL_VERSION}*
+if [ $? -ne 0 ]; then
+    echo "falling back on binary k8s install"
+    set -e
+    install_k8s_using_binary "v${K8S_FULL_VERSION}" "v${KUBERNETES_CNI_VERSION}" "${KUBERNETES_CNI_OS}"
+fi
 set -e
 
 case $CONTAINER_RUNTIME in
