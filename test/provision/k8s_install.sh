@@ -331,6 +331,67 @@ discovery:
 EOF
 )
 
+# V1BETA5 configuration is enabled with DualStack feature gate by default.
+# IPv6 only clusters can still be opted by setting IPv6 variable to 1.
+# It also sets the cgroup-driver to "cgroupfs", away from "systemd",
+# so that docker does not have to be reconfigured and restarted.
+# This difffers from V1BETA4 because as it does not contain the featureGates field:
+#  - featureGates: Invalid value: map[string]bool{"IPv6DualStack":true}: IPv6DualStack is not a valid feature name.
+KUBEADM_CONFIG_V1BETA5=$(cat <<-EOF
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: InitConfiguration
+bootstrapTokens:
+- groups:
+  - system:bootstrappers:kubeadm:default-node-token
+  token: {{ .TOKEN }}
+  ttl: 24h0m0s
+  usages:
+  - signing
+  - authentication
+localAPIEndpoint:
+  advertiseAddress: "{{ .KUBEADM_ADDR }}"
+  bindPort: 6443
+nodeRegistration:
+  criSocket: "{{ .KUBEADM_CRI_SOCKET }}"
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+kubernetesVersion: "v{{ .K8S_FULL_VERSION }}"
+apiServer:
+  extraArgs:
+    "feature-gates": "{{ .API_SERVER_FEATURE_GATES }},IPv6DualStack={{ .IPV6_DUAL_STACK_FEATURE_GATE }}"
+  timeoutForControlPlane: 4m0s
+controlPlaneEndpoint: k8s1:6443
+controllerManager:
+  extraArgs:
+    "node-cidr-mask-size-ipv6": "120"
+    "feature-gates": "{{ .CONTROLLER_FEATURE_GATES }},IPv6DualStack={{ .IPV6_DUAL_STACK_FEATURE_GATE }}"
+networking:
+  dnsDomain: cluster.local
+  podSubnet: "{{ .KUBEADM_V1BETA2_POD_CIDR }}"
+  serviceSubnet: "{{ .KUBEADM_V1BETA2_SVC_CIDR }}"
+---
+kind: KubeletConfiguration
+apiVersion: kubelet.config.k8s.io/v1beta1
+cgroupDriver: cgroupfs
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: JoinConfiguration
+discovery:
+  bootstrapToken:
+    token: {{ .TOKEN }}
+    apiServerEndpoint: "k8s1:6443"
+    unsafeSkipCAVerification: true
+  tlsBootstrapToken: {{ .TOKEN }}
+nodeRegistration:
+  criSocket: "{{ .KUBEADM_CRI_SOCKET }}"
+  ignorePreflightErrors:
+  - cri
+  - SystemVerification
+  - swap
+EOF
+)
+
 # CRIO bridge disabled.
 if [[ -f  "/etc/cni/net.d/100-crio-bridge.conf" ]]; then
     echo "Disabling crio CNI bridge"
@@ -471,7 +532,7 @@ case $K8S_VERSION in
         KUBEADM_OPTIONS="--ignore-preflight-errors=cri,swap"
         KUBEADM_WORKER_OPTIONS="--config=/tmp/config.yaml"
         sudo ln -sf $COREDNS_DEPLOYMENT $DNS_DEPLOYMENT
-        KUBEADM_CONFIG="${KUBEADM_CONFIG_V1BETA4}"
+        KUBEADM_CONFIG="${KUBEADM_CONFIG_V1BETA5}"
         CONTROLLER_FEATURE_GATES="EndpointSliceTerminatingCondition=true"
         API_SERVER_FEATURE_GATES="EndpointSliceTerminatingCondition=true"
         ;;
@@ -534,7 +595,7 @@ if [[ "${HOST}" == "k8s1" ]]; then
     if [[ "${SKIP_K8S_PROVISION}" == "false" ]]; then
       echo "${KUBEADM_CONFIG}" | envtpl > /tmp/config.yaml
 
-      sudo kubeadm init  --config /tmp/config.yaml $KUBEADM_OPTIONS
+      sudo kubeadm init  --config /tmp/config.yaml $KUBEADM_OPTIONS || journalctl -xeu kubelet && exit 1
 
       mkdir -p /root/.kube
       sudo sed -i "s/${KUBEADM_ADDR}/k8s1/" /etc/kubernetes/admin.conf
