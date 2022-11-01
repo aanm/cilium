@@ -16,11 +16,7 @@ import (
 )
 
 func DoSysctrl(mib string) ([]string, error) {
-	sysctl, err := exec.LookPath("sysctl")
-	if err != nil {
-		return []string{}, err
-	}
-	cmd := exec.Command(sysctl, "-n", mib)
+	cmd := exec.Command("sysctl", "-n", mib)
 	cmd.Env = getSysctrlEnv(os.Environ())
 	out, err := cmd.Output()
 	if err != nil {
@@ -153,6 +149,9 @@ func VirtualizationWithContext(ctx context.Context) (string, string, error) {
 			if StringsContains(contents, "kvm") {
 				system = "kvm"
 				role = "host"
+			} else if StringsContains(contents, "hv_util") {
+				system = "hyperv"
+				role = "guest"
 			} else if StringsContains(contents, "vboxdrv") {
 				system = "vbox"
 				role = "host"
@@ -278,6 +277,12 @@ func GetOSRelease() (platform string, version string, err error) {
 			version = trimQuotes(field[1])
 		}
 	}
+
+	// cleanup amazon ID
+	if platform == "amzn" {
+		platform = "amazon"
+	}
+
 	return platform, version, nil
 }
 
