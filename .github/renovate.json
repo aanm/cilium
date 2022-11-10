@@ -3,5 +3,9 @@
   "extends": [
     "config:base"
   ],
-  "includePaths": ["images/**"]
+  "includePaths": ["images/**"],
+  "ignorePresets": [":prHourlyLimit2"],
+  "separateMajorMinor": true,
+  "separateMultipleMajor": true,
+  "separateMinorPatch": true
 }
