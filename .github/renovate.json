@@ -18,5 +18,10 @@
   "labels": [
     "kind/enhancement",
     "release-note/misc"
-  ]
+  ],
+  "postUpgradeTasks": {
+    "commands": ["make -C images/ update-runtime-image"],
+    "fileFilters": ["images/runtime/Dockerfile", "images/builder/Dockerfile"],
+    "executionMode": "update"
+  }
 }
