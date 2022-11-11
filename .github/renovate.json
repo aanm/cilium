@@ -50,7 +50,8 @@
     },
     {
       "matchPackageNames": [
-        "docker.io/library/golang"
+        "docker.io/library/golang",
+        "go"
       ],
       "allowedVersions": "1.19",
       "matchBaseBranches": [
@@ -59,7 +60,8 @@
     },
     {
       "matchPackageNames": [
-        "docker.io/library/golang"
+        "docker.io/library/golang",
+        "go"
       ],
       "allowedVersions": "1.18",
       "matchBaseBranches": [
@@ -68,7 +70,8 @@
     },
     {
       "matchPackageNames": [
-        "docker.io/library/golang"
+        "docker.io/library/golang",
+        "go"
       ],
       "allowedVersions": "1.17",
       "matchBaseBranches": [
@@ -77,7 +80,8 @@
     },
     {
       "matchPackageNames": [
-        "docker.io/library/golang"
+        "docker.io/library/golang",
+        "go"
       ],
       "allowedVersions": "1.16",
       "matchBaseBranches": [
