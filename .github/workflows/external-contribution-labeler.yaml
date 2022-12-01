@@ -7,6 +7,9 @@ on:
       - synchronize
       - reopened
 
+permissions:
+  issues: write
+
 jobs:
   labeler:
     if: |
