@@ -18,5 +18,5 @@ pull_request_rules:
         - -files~=^((daemon/)|(pkg/))
     actions:
       label:
-        add:
+        toggle:
           - waiting-on-reviews
