@@ -1,0 +1,176 @@
+name: Conditional Status Checker
+
+on:
+  workflow_run:
+    workflows:
+      - "Go-related checks"
+      - "Documentation Updates"
+    types:
+      - completed
+#  check_run:
+#    types:
+#      - completed
+
+permissions:
+  # To be able to access the repository with actions/checkout
+  contents: read
+  # To allow retrieving information from the PR API
+  pull-requests: read
+  # So that Sibz/github-status-action can write into the status API
+  statuses: write
+
+concurrency:
+  # TODO: Define the right concurrency group
+  group: |
+    ${{ github.workflow }}
+    ${{ github.event_name }}
+    ${{
+      (github.event_name == 'schedule' && github.sha) ||
+      (github.event_name == 'issue_comment' && (
+        github.event.comment.body == '/ci-gke' ||
+        github.event.comment.body == '/test'
+      ) && github.event.issue.number) ||
+      (github.event_name == 'pull_request' && github.event.pull_request.number)
+    }}
+  cancel-in-progress: true
+
+env:
+  check_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+jobs:
+  check_changes:
+    name: Deduce required tests from code changes
+    # We only need to do status checks for PRs
+    if: ${{ github.event.workflow_run.head_branch != 'master' }}
+    runs-on: ubuntu-latest
+    steps:
+      # TODO: used for debugging porpuses, remove once the GH workflow is
+      #       complete
+      - uses: hmarr/debug-action@v2
+
+      # We need to checkout the code for paths-filter to work.
+      - name: Checkout code
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        with:
+          persist-credentials: false
+
+      - name: Retrieve pull request's base and head
+        if: ${{ github.event.workflow_run.pull_requests[0] }}
+        id: pr
+        run: |
+          echo "::set-output name=base::${{ github.event.workflow_run.pull_requests[0].base.sha }}"
+          echo "::set-output name=head::${{ github.event.workflow_run.pull_requests[0].head.sha }}"
+
+      - name: Check source changes
+        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50
+        id: src-changes
+        with:
+          base: ${{ steps.pr.outputs.base }}
+          ref: ${{ steps.pr.outputs.head }}
+          # We want to know if the PR is
+          # a) changing files inside Documentation/
+          # b) changing files inside pkg/
+          filters: |
+            documentation:
+              - '(Documentation)/**'
+            pkg:
+              - '(pkg)/**'
+
+      - name: Set up job variables
+        id: vars
+        run: |
+          if [ ${{ github.event.workflow_run.pull_requests[0] != null }} ]; then
+            SHA=${{ steps.pr.outputs.head }}
+          else
+            SHA=${{ github.sha }}
+          fi
+
+          echo ::set-output name=sha::${SHA}
+
+      - name: Set up required jobs
+        id: required
+        run: |
+          # Retrieve all workflows for this given PR
+          PR_WORKFLOWS_API_JSON=$(curl \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs?head_sha=${{ steps.pr.outputs.head }})
+
+          # TODO: Remove once the GH workflow is complete
+          echo "${PR_WORKFLOWS_API_JSON}"
+
+          # Check the workflow run conclusion for the "Documentation Updates"
+          # workflow run.
+          docs_pass=$(echo "$PR_WORKFLOWS_API_JSON" | jq -r '.workflow_runs[] | select(.name=="Documentation Updates") | select(.status=="completed") | .conclusion')
+
+          # If the PR is modifying any documentation file then the workflow
+          # "Documentation Updates" needs to be successful.
+          if [ "${{ steps.src-changes.outputs.documentation }}" == "true" ]; then
+            docs="[Required] - Documentation - $docs_pass"
+            # Fail this "Conditional Status Checker" if the "Documentation"
+            # workflow was not successful.
+            if [ "${docs_pass}" != "success" ]; then
+              fail="true"
+            fi
+          else
+            docs="[Not required] - Documentation - $docs_pass"
+          fi
+
+          # If the PR is modifying any pkg/ file then the workflow
+          # "Go-related checks" needs to be successful.
+          golang_pass=$(echo "$PR_WORKFLOWS_API_JSON" | jq -r '.workflow_runs[] | select(.name=="Go-related checks") | select(.status=="completed") | .conclusion')
+          if [ "${{ steps.src-changes.outputs.pkg }}" == "true" ]; then
+            go="[Required] - Golang - $golang_pass"
+            # Fail this "Conditional Status Checker" if the "Go-related checks"
+            # workflow was not successful.
+            if [ "${golang_pass}" != "success" ]; then
+              fail="true"
+            fi
+          else
+            go="[Not required] - Golang - $golang_pass"
+          fi
+          echo ::set-output name=docs::${docs}
+          echo ::set-output name=go::${go}
+
+          if [ "${fail}" == "true" ]; then
+             exit 1
+          fi
+
+      - name: Set commit status to success
+        if: ${{ success() }}
+        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f
+        with:
+          authToken: ${{ secrets.GITHUB_TOKEN }}
+          sha: ${{ steps.vars.outputs.sha }}
+          context: ${{ github.workflow }}
+          description: |
+            ${{ steps.required.outputs.docs }}
+            ${{ steps.required.outputs.go }}
+          state: success
+          target_url: ${{ env.check_url }}
+
+      - name: Set commit status to failure
+        if: ${{ failure() }}
+        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f
+        with:
+          authToken: ${{ secrets.GITHUB_TOKEN }}
+          sha: ${{ steps.vars.outputs.sha }}
+          context: ${{ github.workflow }}
+          description: |
+            ${{ steps.required.outputs.docs }}
+            ${{ steps.required.outputs.go }}
+          state: failure
+          target_url: ${{ env.check_url }}
+
+      - name: Set commit status to cancelled
+        if: ${{ cancelled() }}
+        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f
+        with:
+          authToken: ${{ secrets.GITHUB_TOKEN }}
+          sha: ${{ steps.vars.outputs.sha }}
+          context: ${{ github.workflow }}
+          description: |
+            ${{ steps.required.outputs.docs }}
+            ${{ steps.required.outputs.go }}
+          state: error
+          target_url: ${{ env.check_url }}
