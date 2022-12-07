@@ -30,7 +30,7 @@ type Client struct {
 }
 
 // DefaultSockPath returns default UNIX domain socket path or
-// path set using CILIUM_SOCK env variable
+// path set using CILIUM_SOCK env variable.
 func DefaultSockPath() string {
 	// Check if environment variable points to socket
 	e := os.Getenv(defaults.SockPathEnv)
