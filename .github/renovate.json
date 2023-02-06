@@ -37,6 +37,7 @@
         "*"
       ],
       "matchUpdateTypes": [
+        "digest",
         "patch",
         "pin",
         "pinDigest"
