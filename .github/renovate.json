@@ -21,10 +21,7 @@
   "pruneStaleBranches": true,
   "baseBranches": [
     "master",
-    "v1.13",
-    "v1.12",
-    "v1.11",
-    "v1.10"
+    "v1.13"
   ],
   "labels": [
     "kind/enhancement",
@@ -73,17 +70,6 @@
     },
     {
       "matchPackageNames": [
-        "docker.io/library/ubuntu"
-      ],
-      "allowedVersions": "20.04",
-      "matchBaseBranches": [
-        "v1.12",
-        "v1.11",
-        "v1.10"
-      ]
-    },
-    {
-      "matchPackageNames": [
         "docker.io/library/golang",
         "go"
       ],
@@ -94,44 +80,11 @@
     },
     {
       "matchPackageNames": [
-        "docker.io/library/golang",
-        "go"
-      ],
-      "allowedVersions": "<1.19",
-      "matchBaseBranches": [
-        "v1.12"
-      ]
-    },
-    {
-      "matchPackageNames": [
-        "docker.io/library/golang",
-        "go"
-      ],
-      "allowedVersions": "<1.18",
-      "matchBaseBranches": [
-        "v1.11"
-      ]
-    },
-    {
-      "matchPackageNames": [
-        "docker.io/library/golang",
-        "go"
-      ],
-      "allowedVersions": "<1.17",
-      "matchBaseBranches": [
-        "v1.10"
-      ]
-    },
-    {
-      "matchPackageNames": [
         "docker.io/library/alpine"
       ],
       "allowedVersions": "<3.17",
       "matchBaseBranches": [
-        "v1.13",
-        "v1.12",
-        "v1.11",
-        "v1.10"
+        "v1.13"
       ]
     }
   ],
