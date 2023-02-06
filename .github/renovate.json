@@ -39,9 +39,7 @@
       "matchUpdateTypes": [
         "patch",
         "pin",
-        "pinDigest",
-        "bump",
-        "digest"
+        "pinDigest"
       ]
     },
     {
