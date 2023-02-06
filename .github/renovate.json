@@ -13,6 +13,7 @@
   "ignorePaths": [
     "images/cilium-test/Dockerfile"
   ],
+  "pinDigests": true,
   "ignorePresets": [":prHourlyLimit2"],
   "separateMajorMinor": true,
   "separateMultipleMajor": true,
