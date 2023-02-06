@@ -2,9 +2,11 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base",
-    ":gitSignOff"
+    ":gitSignOff",
+    "helpers:pinGitHubActionDigests"
   ],
   "includePaths": [
+    ".github/workflows/**",
     "images/**",
     "examples/hubble/*"
   ],
@@ -28,6 +30,30 @@
     "release-note/misc"
   ],
   "packageRules": [
+    {
+      "groupName": "all patch dependencies",
+      "groupSlug": "all-patch",
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "pin",
+        "pinDigest",
+        "bump",
+        "digest"
+      ]
+    },
+    {
+      "groupName": "all minor dependencies",
+      "groupSlug": "all-minor",
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ]
+    },
     {
       "groupName": "base-images",
       "matchFiles": [
