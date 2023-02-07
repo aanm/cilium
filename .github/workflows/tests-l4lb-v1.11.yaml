@@ -95,7 +95,7 @@ jobs:
           echo "head=$(jq -r '.head.sha' pr.json)" >> $GITHUB_OUTPUT
       - name: Check code changes
         if: ${{ github.event.issue.pull_request }}
-        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50
+        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # v1.0.0
         id: tested-tree
         with:
           base: ${{ steps.pr.outputs.base }}
@@ -149,7 +149,7 @@ jobs:
           echo sha=${SHA} >> $GITHUB_OUTPUT
 
       - name: Set commit status to pending
-        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f
+        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f # v1.0.0
         with:
           authToken: ${{ secrets.GITHUB_TOKEN }}
           sha: ${{ steps.vars.outputs.sha }}
@@ -196,7 +196,7 @@ jobs:
           sudo cilium sysdump --output-filename cilium-sysdump-out
 
       - name: Upload cilium-sysdump
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: ${{ !success() }}
         with:
           name: cilium-sysdump-out.zip
@@ -204,7 +204,7 @@ jobs:
 
       - name: Set commit status to success
         if: ${{ success() }}
-        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f
+        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f # v1.0.0
         with:
           authToken: ${{ secrets.GITHUB_TOKEN }}
           sha: ${{ steps.vars.outputs.sha }}
@@ -215,7 +215,7 @@ jobs:
 
       - name: Set commit status to failure
         if: ${{ failure() }}
-        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f
+        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f # v1.0.0
         with:
           authToken: ${{ secrets.GITHUB_TOKEN }}
           sha: ${{ steps.vars.outputs.sha }}
@@ -226,7 +226,7 @@ jobs:
 
       - name: Set commit status to cancelled
         if: ${{ cancelled() }}
-        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f
+        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f # v1.0.0
         with:
           authToken: ${{ secrets.GITHUB_TOKEN }}
           sha: ${{ steps.vars.outputs.sha }}
