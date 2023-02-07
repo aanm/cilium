@@ -27,7 +27,7 @@ jobs:
 
       - name: Cache LLVM and Clang
         id: cache-llvm
-        uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920 # v1.0.0
+        uses: actions/cache@cffae9552bb9f84b9812c1ee9ea2e3c0a70a797e # v1.0.3
         with:
           path: $HOME/.clang
           key: llvm-10.0
@@ -66,7 +66,7 @@ jobs:
           git rebase --exec "make build -j $(nproc)" $PR_PARENT_SHA
 
       - name: Check bpf code changes
-        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # v1.0.0
+        uses: dorny/paths-filter@0c9e16cc6d8eddce40266574aa8c3674ddf96cce # v1.0.1
         id: bpf-tree
         with:
           filters: |
@@ -86,7 +86,7 @@ jobs:
           git rebase --exec "make -C bpf build_all -j $(nproc)" $PR_PARENT_SHA
 
       - name: Check test code changes
-        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # v1.0.0
+        uses: dorny/paths-filter@0c9e16cc6d8eddce40266574aa8c3674ddf96cce # v1.0.1
         id: test-tree
         with:
           filters: |

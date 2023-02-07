@@ -37,11 +37,11 @@ jobs:
         uses: ./.github/actions/set-env-variables
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@15c905b16b06416d2086efa066dd8e3a35cc7f98 # v1.0.0
+        uses: docker/setup-buildx-action@5c0276ad2c777e56aaf2c95ef4ad5d1fa7bb4d1d # v1.0.4
 
       - name: Set up QEMU
         id: qemu
-        uses: docker/setup-qemu-action@e81a89b1732b9c48d79cd809d8d81d79c4647a18 # v1.0.0
+        uses: docker/setup-qemu-action@25f0500ff22e406f7191a2a8ba8cda16901ca018 # v1.0.2
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@9becc617647dfa20ae7b1151972e9b3a2c338a2b # v1.0.0
@@ -74,7 +74,7 @@ jobs:
 
       - name: Login to quay.io
         if: ${{ steps.cilium-runtime-tag-in-repositories.outputs.exists == 'false' }}
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # v1.0.0
+        uses: docker/login-action@7e07bf5fa3ba52ee75b9c8abd52b1b738d6140ad # v1.0.1
         with:
           registry: quay.io
           username: ${{ secrets.QUAY_BASE_RELEASE_USERNAME }}
@@ -82,7 +82,7 @@ jobs:
 
       - name: Release build cilium-runtime
         if: ${{ steps.cilium-runtime-tag-in-repositories.outputs.exists == 'false' }}
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671 # v1.0.0
+        uses: docker/build-push-action@e5e36c4a4e2085c523c6fb6a553b8d00c30c1716 # v1.0.1
         id: docker_build_release_runtime
         with:
           provenance: false
@@ -172,7 +172,7 @@ jobs:
 
       - name: Login to quay.io
         if: ${{ steps.cilium-builder-tag-in-repositories.outputs.exists == 'false' && steps.cilium-runtime-tag-in-repositories.outputs.exists != 'false' }}
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # v1.0.0
+        uses: docker/login-action@7e07bf5fa3ba52ee75b9c8abd52b1b738d6140ad # v1.0.1
         with:
           registry: quay.io
           username: ${{ secrets.QUAY_BASE_RELEASE_USERNAME }}
@@ -180,7 +180,7 @@ jobs:
 
       - name: Release build cilium-builder
         if: ${{ steps.cilium-builder-tag-in-repositories.outputs.exists == 'false' }}
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671 # v1.0.0
+        uses: docker/build-push-action@e5e36c4a4e2085c523c6fb6a553b8d00c30c1716 # v1.0.1
         id: docker_build_release_builder
         with:
           provenance: false
