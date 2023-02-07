@@ -29,26 +29,18 @@
   ],
   "packageRules": [
     {
-      "groupName": "all patch dependencies",
-      "groupSlug": "all-patch",
-      "matchPackagePatterns": [
-        "*"
+      "groupName": "all github action dependencies",
+      "groupSlug": "all-github-action",
+      "matchFiles": [
+        ".github/workflows/**"
       ],
       "matchUpdateTypes": [
+        "major",
+        "minor",
         "digest",
         "patch",
         "pin",
         "pinDigest"
-      ]
-    },
-    {
-      "groupName": "all minor dependencies",
-      "groupSlug": "all-minor",
-      "matchPackagePatterns": [
-        "*"
-      ],
-      "matchUpdateTypes": [
-        "minor"
       ]
     },
     {
