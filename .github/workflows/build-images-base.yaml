@@ -74,7 +74,7 @@ jobs:
 
       - name: Login to quay.io
         if: ${{ steps.cilium-runtime-tag-in-repositories.outputs.exists == 'false' }}
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # renovate: tag=v1.0.0
+        uses: docker/login-action@62216b50636a8c8c25d246437857ed84232019ca # v1.0.0
         with:
           registry: quay.io
           username: ${{ secrets.QUAY_BASE_RELEASE_USERNAME }}
@@ -172,7 +172,7 @@ jobs:
 
       - name: Login to quay.io
         if: ${{ steps.cilium-builder-tag-in-repositories.outputs.exists == 'false' && steps.cilium-runtime-tag-in-repositories.outputs.exists != 'false' }}
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # renovate: tag=v1.0.0
+        uses: docker/login-action@62216b50636a8c8c25d246437857ed84232019ca # v1.0.0
         with:
           registry: quay.io
           username: ${{ secrets.QUAY_BASE_RELEASE_USERNAME }}
