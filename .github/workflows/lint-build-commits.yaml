@@ -38,7 +38,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends libtinfo5
 
       - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@ef175530927af66c61e4e8da4fea4e15de63f780 # v1.0.0
+        uses: KyleMayes/install-llvm-action@e344f6e74abb21a54a73c7b86bf60c045ea88288 # v1.0.0
         with:
           version: "10.0"
           directory: $HOME/.clang
@@ -66,7 +66,7 @@ jobs:
           git rebase --exec "make build -j $(nproc)" $PR_PARENT_SHA
 
       - name: Check bpf code changes
-        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # v1.0.0
+        uses: dorny/paths-filter@29d498d99de1847fb46b3d452709b3af9ae99916 # v1.0.0
         id: bpf-tree
         with:
           filters: |
@@ -86,7 +86,7 @@ jobs:
           git rebase --exec "make -C bpf build_all -j $(nproc)" $PR_PARENT_SHA
 
       - name: Check test code changes
-        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # v1.0.0
+        uses: dorny/paths-filter@29d498d99de1847fb46b3d452709b3af9ae99916 # v1.0.0
         id: test-tree
         with:
           filters: |

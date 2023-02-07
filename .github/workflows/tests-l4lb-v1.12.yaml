@@ -95,7 +95,7 @@ jobs:
           echo "head=$(jq -r '.head.sha' pr.json)" >> $GITHUB_OUTPUT
       - name: Check code changes
         if: ${{ github.event.issue.pull_request }}
-        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # v1.0.0
+        uses: dorny/paths-filter@29d498d99de1847fb46b3d452709b3af9ae99916 # v1.0.0
         id: tested-tree
         with:
           base: ${{ steps.pr.outputs.base }}
@@ -149,7 +149,7 @@ jobs:
           echo sha=${SHA} >> $GITHUB_OUTPUT
 
       - name: Set commit status to pending
-        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f # v1.0.0
+        uses: Sibz/github-status-action@610adfb4658875f66f4b8a29ec2bd4744c4839de # v1.0.0
         with:
           authToken: ${{ secrets.GITHUB_TOKEN }}
           sha: ${{ steps.vars.outputs.sha }}
@@ -208,7 +208,7 @@ jobs:
 
       - name: Set commit status to success
         if: ${{ success() }}
-        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f # v1.0.0
+        uses: Sibz/github-status-action@610adfb4658875f66f4b8a29ec2bd4744c4839de # v1.0.0
         with:
           authToken: ${{ secrets.GITHUB_TOKEN }}
           sha: ${{ steps.vars.outputs.sha }}
@@ -219,7 +219,7 @@ jobs:
 
       - name: Set commit status to failure
         if: ${{ failure() }}
-        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f # v1.0.0
+        uses: Sibz/github-status-action@610adfb4658875f66f4b8a29ec2bd4744c4839de # v1.0.0
         with:
           authToken: ${{ secrets.GITHUB_TOKEN }}
           sha: ${{ steps.vars.outputs.sha }}
@@ -230,7 +230,7 @@ jobs:
 
       - name: Set commit status to cancelled
         if: ${{ cancelled() }}
-        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f # v1.0.0
+        uses: Sibz/github-status-action@610adfb4658875f66f4b8a29ec2bd4744c4839de # v1.0.0
         with:
           authToken: ${{ secrets.GITHUB_TOKEN }}
           sha: ${{ steps.vars.outputs.sha }}
