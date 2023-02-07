@@ -32,7 +32,7 @@ jobs:
     timeout-minutes: 120
     steps:
       - name: Checkout master branch to access local actions
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v1.0.0
+        uses: actions/checkout@af513c7a016048ae468971c52ed77d9562c7c819 # v1.0.0
         with:
           ref: ${{ github.event.repository.default_branch }}
           persist-credentials: false
@@ -58,7 +58,7 @@ jobs:
           echo ::set-output name=sha::${SHA}
 
       - name: Checkout
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v1.0.0
+        uses: actions/checkout@af513c7a016048ae468971c52ed77d9562c7c819 # v1.0.0
         with:
           ref: ${{ steps.vars.outputs.sha }}
           persist-credentials: false
@@ -145,7 +145,7 @@ jobs:
 
       - name: Upload artifacts
         if: ${{ !success() }}
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v1.0.0 # v3.1.2
+        uses: actions/upload-artifact@3446296876d12d4e3a0f3145a3c87e67bf0a16b5 # v1.0.0 # v3.1.2
         with:
           name: cilium-sysdump-out.zip
           path: cilium-sysdump-out.zip
