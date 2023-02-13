@@ -16,6 +16,14 @@
   "ignoreDeps": [
     "google/oss-fuzz"
   ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "recreateClosed": true,
+    "rebaseStalePrs": true,
+    "branchTopic": "lock-file-maintenance",
+    "commitMessageAction": "Lock file maintenance",
+    "prBodyDefinitions": {"Change": "All locks refreshed"}
+  },
   "pinDigests": true,
   "ignorePresets": [":prHourlyLimit2"],
   "separateMajorMinor": true,
