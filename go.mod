@@ -16,10 +16,10 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.25.0
 	github.com/aws/smithy-go v1.9.0
 	github.com/blang/semver/v4 v4.0.0
-	github.com/cilium/customvet v0.0.0-20201209211516-9852765c1ac4
+	github.com/cilium/customvet v0.0.0-20221207181232-aa8731fa2d27
 	github.com/cilium/deepequal-gen v0.0.0-20200406125435-ad6a9003139e
 	github.com/cilium/ebpf v0.7.0
-	github.com/cilium/ipam v0.0.0-20211026130907-54a76012817c
+	github.com/cilium/ipam v0.0.0-20220824141044-46ef3d556735
 	github.com/cilium/lumberjack/v2 v2.2.1
 	github.com/cilium/proxy v0.0.0-20220202185058-28b3c32edfee
 	github.com/cilium/workerpool v1.1.1
@@ -40,7 +40,7 @@ require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
 	github.com/golang/protobuf v1.5.2
-	github.com/google/go-cmp v0.5.6
+	github.com/google/go-cmp v0.5.9
 	github.com/google/gopacket v1.1.19
 	github.com/google/gops v0.3.22
 	github.com/google/renameio v1.0.1
@@ -78,17 +78,17 @@ require (
 	go.etcd.io/etcd/client/v3 v3.5.1
 	go.uber.org/goleak v1.1.12
 	go.universe.tf/metallb v0.11.0
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
-	golang.org/x/net v0.4.0
-	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
-	golang.org/x/sys v0.3.0
+	golang.org/x/crypto v0.1.0
+	golang.org/x/net v0.6.0
+	golang.org/x/sync v0.1.0
+	golang.org/x/sys v0.5.0
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac
-	golang.org/x/tools v0.1.12
-	golang.zx2c4.com/wireguard v0.0.0-20211017052713-f87e87af0d9a
-	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20211027115401-c9b1ec1aa6d8
-	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa
-	google.golang.org/grpc v1.43.0
-	google.golang.org/protobuf v1.27.1
+	golang.org/x/tools v0.4.0
+	golang.zx2c4.com/wireguard v0.0.0-20220920152132-bb719d3a6e2c
+	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20230215201556-9c5414ab4bde
+	google.golang.org/genproto v0.0.0-20230216225411-c8e22ba71e44
+	google.golang.org/grpc v1.53.0
+	google.golang.org/protobuf v1.28.1
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
 	gopkg.in/ini.v1 v1.64.0
 	gopkg.in/yaml.v2 v2.4.0
@@ -123,9 +123,9 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sso v1.6.2 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.11.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/census-instrumentation/opencensus-proto v0.3.0 // indirect
-	github.com/cespare/xxhash/v2 v2.1.2 // indirect
-	github.com/cncf/xds/go v0.0.0-20211011173535-cb28da3451f1 // indirect
+	github.com/census-instrumentation/opencensus-proto v0.4.1 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/cncf/xds/go v0.0.0-20230105202645-06c439db220b // indirect
 	github.com/containerd/containerd v1.5.7 // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
@@ -134,7 +134,7 @@ require (
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/emicklei/go-restful v2.9.5+incompatible // indirect
-	github.com/envoyproxy/protoc-gen-validate v0.6.2 // indirect
+	github.com/envoyproxy/protoc-gen-validate v0.9.1 // indirect
 	github.com/evanphx/json-patch v5.6.0+incompatible // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-kit/kit v0.12.0 // indirect
@@ -162,7 +162,7 @@ require (
 	github.com/ishidawataru/sctp v0.0.0-20210707070123-9a39160e9062 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
-	github.com/josharian/native v0.0.0-20200817173448-b6b71def0850 // indirect
+	github.com/josharian/native v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
@@ -173,11 +173,11 @@ require (
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect
 	github.com/mdlayher/arp v0.0.0-20191213142603-f72070a231fc // indirect
 	github.com/mdlayher/ethernet v0.0.0-20190606142754-0394541c37b7 // indirect
-	github.com/mdlayher/genetlink v1.0.0 // indirect
+	github.com/mdlayher/genetlink v1.2.0 // indirect
 	github.com/mdlayher/ndp v0.0.0-20200602162440-17ab9e3e5567 // indirect
-	github.com/mdlayher/netlink v1.4.1 // indirect
+	github.com/mdlayher/netlink v1.6.2 // indirect
 	github.com/mdlayher/raw v0.0.0-20210412142147-51b895745faf // indirect
-	github.com/mdlayher/socket v0.0.0-20211102153432-57e3fa563ecb // indirect
+	github.com/mdlayher/socket v0.2.3 // indirect
 	github.com/mikioh/ipaddr v0.0.0-20190404000644-d465c8ab6721 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.4.2 // indirect
@@ -194,7 +194,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
-	github.com/spf13/afero v1.6.0 // indirect
+	github.com/spf13/afero v1.9.2 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.9 // indirect
@@ -204,11 +204,11 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.19.1 // indirect
-	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
-	golang.org/x/oauth2 v0.0.0-20211028175245-ba495a64dcb5 // indirect
-	golang.org/x/term v0.3.0 // indirect
-	golang.org/x/text v0.5.0 // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
+	golang.org/x/mod v0.7.0 // indirect
+	golang.org/x/oauth2 v0.4.0 // indirect
+	golang.org/x/term v0.5.0 // indirect
+	golang.org/x/text v0.7.0 // indirect
+	golang.zx2c4.com/wintun v0.0.0-20211104114900-415007cec224 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
