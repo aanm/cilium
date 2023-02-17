@@ -1,4 +1,5 @@
-//+build !linux,!openbsd
+//go:build !linux && !openbsd && !windows && !freebsd
+// +build !linux,!openbsd,!windows,!freebsd
 
 package wgctrl
 
