@@ -8,7 +8,14 @@
   "includePaths": [
     ".github/workflows/**",
     "images/**",
-    "examples/hubble/*"
+    "examples/hubble/*",
+    "go.mod",
+    "go.sum",
+    "vendor/*",
+    "vendor/modules.txt"
+  ],
+  postUpdateOptions: [
+    "gomodTidy",
   ],
   // This ignorePaths configuration option overrides the config:base preset and
   // should not be removed.
@@ -55,6 +62,33 @@
       "schedule": [
         "on friday"
       ]
+    },
+    {
+      "groupName": "all go dependencies",
+      "groupSlug": "all-go-deps",
+      "matchFiles": [
+        "go.mod",
+        "go.sum"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "digest",
+        "patch",
+        "pin",
+        "pinDigest"
+      ]
+    },
+    {
+      "matchPackageNames": [
+        "go.universe.tf/metallb",
+        "github.com/miekg/dns"
+      ],
+      "matchPackagePatterns": [
+        "k8s.io/*",
+        "sigs.k8s.io/*"
+      ],
+      "enabled": false
     },
     {
       "groupName": "base-images",
