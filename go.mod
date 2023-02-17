@@ -10,9 +10,9 @@ require (
 	github.com/Azure/go-autorest/autorest/azure/auth v0.5.7
 	github.com/Azure/go-autorest/autorest/to v0.4.0
 	github.com/Azure/go-autorest/autorest/validation v0.2.0 // indirect
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.957
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1843
 	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef
-	github.com/aws/aws-sdk-go-v2 v1.3.3
+	github.com/aws/aws-sdk-go-v2 v1.3.4
 	github.com/aws/aws-sdk-go-v2/config v1.1.6
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.0.6
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.5.0
@@ -23,10 +23,10 @@ require (
 	github.com/cilium/ebpf v0.5.1-0.20210421150058-a4ee356536f3
 	github.com/cilium/ipam v0.0.0-20201106170308-4184bc4bf9d6
 	github.com/cilium/proxy v0.0.0-20210511221533-82a70d56bf32
-	github.com/cilium/workerpool v1.1.0
+	github.com/cilium/workerpool v1.1.3
 	github.com/cncf/udpa/go v0.0.0-20201211205326-cc1b757b3edd // indirect
 	github.com/containernetworking/cni v0.8.1
-	github.com/containernetworking/plugins v0.9.0
+	github.com/containernetworking/plugins v0.9.1
 	github.com/coreos/go-systemd/v22 v22.3.2
 	github.com/davecgh/go-spew v1.1.1
 	github.com/docker/distribution v2.7.1+incompatible // indirect
@@ -35,33 +35,33 @@ require (
 	github.com/docker/libnetwork v0.0.0-20190128195551-d8d4c8cf03d7
 	github.com/fsnotify/fsnotify v1.4.10-0.20200417215612-7f4cf4dd2b52
 	github.com/go-openapi/errors v0.19.9
-	github.com/go-openapi/loads v0.20.0
-	github.com/go-openapi/runtime v0.19.26
-	github.com/go-openapi/spec v0.20.3
-	github.com/go-openapi/strfmt v0.20.0
-	github.com/go-openapi/swag v0.19.14
-	github.com/go-openapi/validate v0.20.1
+	github.com/go-openapi/loads v0.20.3
+	github.com/go-openapi/runtime v0.19.31
+	github.com/go-openapi/spec v0.20.8
+	github.com/go-openapi/strfmt v0.20.3
+	github.com/go-openapi/swag v0.19.15
+	github.com/go-openapi/validate v0.20.3
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e
 	github.com/golang/protobuf v1.5.2
-	github.com/google/go-cmp v0.5.5
+	github.com/google/go-cmp v0.5.9
 	github.com/google/gopacket v1.1.19
 	github.com/google/gops v0.3.18
-	github.com/google/renameio v1.0.0
+	github.com/google/renameio v1.0.1
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/mux v1.8.0
 	github.com/hashicorp/consul/api v1.3.0
-	github.com/hashicorp/go-immutable-radix v1.3.0
+	github.com/hashicorp/go-immutable-radix v1.3.1
 	github.com/hashicorp/golang-lru v0.5.4
 	// must be bound to this old version not to break libnetwork
 	github.com/ishidawataru/sctp v0.0.0-20180213033435-07191f837fed // indirect
 	github.com/jeremywohl/flatten v1.0.1
 	github.com/kevinburke/ssh_config v0.0.0-20201106050909-4977a11b4351
 	github.com/kr/pretty v0.2.1
-	github.com/mattn/go-shellwords v1.0.10
+	github.com/mattn/go-shellwords v1.0.12
 	github.com/miekg/dns v1.1.26
 	github.com/morikuni/aec v1.0.0 // indirect
-	github.com/onsi/ginkgo v1.12.1
+	github.com/onsi/ginkgo v1.12.3
 	github.com/onsi/gomega v1.10.5
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
@@ -73,31 +73,30 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0
 	github.com/sasha-s/go-deadlock v0.2.1-0.20190427202633-1595213edefa
 	github.com/servak/go-fastping v0.0.0-20160802140958-5718d12e20a0
-	github.com/shirou/gopsutil/v3 v3.21.2
-	github.com/sirupsen/logrus v1.8.1
+	github.com/shirou/gopsutil/v3 v3.21.12
+	github.com/sirupsen/logrus v1.8.2
 	github.com/spf13/cast v1.4.1
-	github.com/spf13/cobra v1.1.1
+	github.com/spf13/cobra v1.1.3
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.7.1
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.7.5
 	github.com/vishvananda/netlink v1.1.1-0.20220125195016-0639e7e787ba
-	github.com/vishvananda/netns v0.0.0-20201230012202-c4f3ca719c73
+	github.com/vishvananda/netns v0.0.4
 	go.etcd.io/etcd v0.5.0-alpha.5.0.20201125193152-8a03d2e9614b
-	go.mongodb.org/mongo-driver v1.5.1 // indirect
-	go.uber.org/goleak v1.1.10
+	go.uber.org/goleak v1.1.12
 	go.universe.tf/metallb v0.9.6
 	golang.org/x/crypto v0.0.0-20211202192323-5770296d904e
-	golang.org/x/net v0.0.0-20211209124913-491a49abca63
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9
+	golang.org/x/net v0.0.0-20220722155237-a158d28d115b
+	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
+	golang.org/x/sys v0.2.0
 	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba
-	golang.org/x/tools v0.1.6-0.20210726203631-07bc1bf47fb2
+	golang.org/x/tools v0.1.12
 	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20210506160403-92e472f520a5
 	google.golang.org/genproto v0.0.0-20210126160654-44e461bb6506
-	google.golang.org/grpc v1.31.0
+	google.golang.org/grpc v1.31.1
 	google.golang.org/protobuf v1.26.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
-	gopkg.in/ini.v1 v1.62.0
+	gopkg.in/ini.v1 v1.66.2
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gopkg.in/yaml.v2 v2.4.0
 	k8s.io/api v0.21.14

@@ -1,3 +1,4 @@
+//go:build linux
 // +build linux
 
 package load
@@ -17,14 +18,14 @@ func Avg() (*AvgStat, error) {
 }
 
 func AvgWithContext(ctx context.Context) (*AvgStat, error) {
-	stat, err := fileAvgWithContext(ctx)
+	stat, err := fileAvgWithContext()
 	if err != nil {
-		stat, err = sysinfoAvgWithContext(ctx)
+		stat, err = sysinfoAvgWithContext()
 	}
 	return stat, err
 }
 
-func sysinfoAvgWithContext(ctx context.Context) (*AvgStat, error) {
+func sysinfoAvgWithContext() (*AvgStat, error) {
 	var info syscall.Sysinfo_t
 	err := syscall.Sysinfo(&info)
 	if err != nil {
@@ -39,7 +40,7 @@ func sysinfoAvgWithContext(ctx context.Context) (*AvgStat, error) {
 	}, nil
 }
 
-func fileAvgWithContext(ctx context.Context) (*AvgStat, error) {
+func fileAvgWithContext() (*AvgStat, error) {
 	values, err := readLoadAvgFromFile()
 	if err != nil {
 		return nil, err
@@ -92,6 +93,8 @@ func MiscWithContext(ctx context.Context) (*MiscStat, error) {
 			continue
 		}
 		switch fields[0] {
+		case "processes":
+			ret.ProcsCreated = int(v)
 		case "procs_running":
 			ret.ProcsRunning = int(v)
 		case "procs_blocked":

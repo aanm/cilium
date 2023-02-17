@@ -1,19 +1,20 @@
-// Copyright 2021 Authors of Cilium
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// SPDX-License-Identifier: Apache-2.0
+// Copyright Authors of Cilium
 
 // Package workerpool implements a concurrency limiting worker pool.
-// Worker routines are spawned on demand as tasks are submitted.
+// Worker routines are spawned on demand as tasks are submitted; up to the
+// configured limit of concurrent workers.
+//
+// When the limit of concurrently running workers is reached, submitting a task
+// blocks until a worker is able to pick it up. This behavior is intentional as
+// it prevents from accumulating tasks which could grow unbounded. Therefore,
+// it is the responsibility of the caller to queue up tasks if that's the
+// intended behavior.
+//
+// One caveat is that while the number of concurrently running workers is
+// limited, task results are not and they accumulate until they are collected.
+// Therefore, if a large number of tasks can be expected, the workerpool should
+// be periodically drained (e.g. every 10k tasks).
 package workerpool
 
 import (
@@ -35,13 +36,14 @@ var (
 // submitted tasks concurrently. The number of concurrent routines never
 // exceeds the specified limit.
 type WorkerPool struct {
-	workers  chan struct{}
-	tasks    chan *task
-	results  []Task
-	wg       sync.WaitGroup
+	workers chan struct{}
+	tasks   chan *task
+	cancel  context.CancelFunc
+	results []Task
+	wg      sync.WaitGroup
+
 	mu       sync.Mutex
 	draining bool
-	cancel   context.CancelFunc
 	closed   bool
 }
 
@@ -91,9 +93,8 @@ func (wp *WorkerPool) Submit(id string, f func(ctx context.Context) error) error
 		wp.mu.Unlock()
 		return ErrDraining
 	}
-
-	wp.mu.Unlock()
 	wp.wg.Add(1)
+	wp.mu.Unlock()
 	wp.tasks <- &task{
 		id:  id,
 		run: f,
@@ -105,8 +106,7 @@ func (wp *WorkerPool) Submit(id string, f func(ctx context.Context) error) error
 // submitting new tasks to the worker pool. Drain returns the results of the
 // tasks that have been processed.
 // If a drain operation is already in progress, ErrDraining is returned.
-// If the worker pool is closed, ErrClosed is returned and the task is not
-// submitted for processing.
+// If the worker pool is closed, ErrClosed is returned.
 func (wp *WorkerPool) Drain() ([]Task, error) {
 	wp.mu.Lock()
 	if wp.closed {
@@ -165,11 +165,14 @@ func (wp *WorkerPool) Close() error {
 func (wp *WorkerPool) run(ctx context.Context) {
 	for t := range wp.tasks {
 		t := t
-		wp.results = append(wp.results, t)
+		result := taskResult{id: t.id}
+		wp.results = append(wp.results, &result)
 		wp.workers <- struct{}{}
 		go func() {
 			defer wp.wg.Done()
-			t.err = t.run(ctx)
+			if t.run != nil {
+				result.err = t.run(ctx)
+			}
 			<-wp.workers
 		}()
 	}
