@@ -31,11 +31,7 @@
   "separateMinorPatch": true,
   "pruneStaleBranches": true,
   "baseBranches": [
-    "master",
-    "v1.13",
-    "v1.12",
-    "v1.11",
-    "v1.10"
+    "master"
   ],
   "labels": [
     "kind/enhancement",
