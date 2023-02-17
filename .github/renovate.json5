@@ -10,9 +10,7 @@
     "images/**",
     "examples/hubble/*",
     "go.mod",
-    "go.sum",
-    "vendor/*",
-    "vendor/modules.txt"
+    "go.sum"
   ],
   postUpdateOptions: [
     "gomodTidy",
@@ -82,7 +80,8 @@
     {
       "matchPackageNames": [
         "go.universe.tf/metallb",
-        "github.com/miekg/dns"
+        "github.com/miekg/dns",
+        "github.com/cilium/metallb"
       ],
       "matchPackagePatterns": [
         "k8s.io/*",
