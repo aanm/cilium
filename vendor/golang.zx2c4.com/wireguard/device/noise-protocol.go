@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: MIT
  *
- * Copyright (C) 2017-2021 WireGuard LLC. All Rights Reserved.
+ * Copyright (C) 2017-2022 WireGuard LLC. All Rights Reserved.
  */
 
 package device
@@ -138,11 +138,11 @@ var (
 	ZeroNonce       [chacha20poly1305.NonceSize]byte
 )
 
-func mixKey(dst *[blake2s.Size]byte, c *[blake2s.Size]byte, data []byte) {
+func mixKey(dst, c *[blake2s.Size]byte, data []byte) {
 	KDF1(dst, c[:], data)
 }
 
-func mixHash(dst *[blake2s.Size]byte, h *[blake2s.Size]byte, data []byte) {
+func mixHash(dst, h *[blake2s.Size]byte, data []byte) {
 	hash, _ := blake2s.New256(nil)
 	hash.Write(h[:])
 	hash.Write(data)
@@ -175,7 +175,7 @@ func init() {
 }
 
 func (device *Device) CreateMessageInitiation(peer *Peer) (*MessageInitiation, error) {
-	var errZeroECDHResult = errors.New("ECDH returned all zeros")
+	errZeroECDHResult := errors.New("ECDH returned all zeros")
 
 	device.staticIdentity.RLock()
 	defer device.staticIdentity.RUnlock()
@@ -282,7 +282,7 @@ func (device *Device) ConsumeMessageInitiation(msg *MessageInitiation) *Peer {
 	// lookup peer
 
 	peer := device.LookupPeer(peerPK)
-	if peer == nil {
+	if peer == nil || !peer.isRunning.Load() {
 		return nil
 	}
 
@@ -436,7 +436,6 @@ func (device *Device) ConsumeMessageResponse(msg *MessageResponse) *Peer {
 	)
 
 	ok := func() bool {
-
 		// lock handshake state
 
 		handshake.mutex.RLock()
@@ -582,12 +581,12 @@ func (peer *Peer) BeginSymmetricSession() error {
 	defer keypairs.Unlock()
 
 	previous := keypairs.previous
-	next := keypairs.loadNext()
+	next := keypairs.next.Load()
 	current := keypairs.current
 
 	if isInitiator {
 		if next != nil {
-			keypairs.storeNext(nil)
+			keypairs.next.Store(nil)
 			keypairs.previous = next
 			device.DeleteKeypair(current)
 		} else {
@@ -596,7 +595,7 @@ func (peer *Peer) BeginSymmetricSession() error {
 		device.DeleteKeypair(previous)
 		keypairs.current = keypair
 	} else {
-		keypairs.storeNext(keypair)
+		keypairs.next.Store(keypair)
 		device.DeleteKeypair(next)
 		keypairs.previous = nil
 		device.DeleteKeypair(previous)
@@ -608,18 +607,18 @@ func (peer *Peer) BeginSymmetricSession() error {
 func (peer *Peer) ReceivedWithKeypair(receivedKeypair *Keypair) bool {
 	keypairs := &peer.keypairs
 
-	if keypairs.loadNext() != receivedKeypair {
+	if keypairs.next.Load() != receivedKeypair {
 		return false
 	}
 	keypairs.Lock()
 	defer keypairs.Unlock()
-	if keypairs.loadNext() != receivedKeypair {
+	if keypairs.next.Load() != receivedKeypair {
 		return false
 	}
 	old := keypairs.previous
 	keypairs.previous = keypairs.current
 	peer.device.DeleteKeypair(old)
-	keypairs.current = keypairs.loadNext()
-	keypairs.storeNext(nil)
+	keypairs.current = keypairs.next.Load()
+	keypairs.next.Store(nil)
 	return true
 }
