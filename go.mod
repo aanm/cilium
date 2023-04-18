@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230106234847-43070de90fa1
-	github.com/Azure/azure-sdk-for-go v67.1.0+incompatible
+	github.com/Azure/azure-sdk-for-go v67.4.0+incompatible
 	github.com/Azure/go-autorest/autorest v0.11.28
 	github.com/Azure/go-autorest/autorest/adal v0.9.21
 	github.com/Azure/go-autorest/autorest/azure/auth v0.5.11
@@ -19,7 +19,7 @@ require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/cilium/coverbee v0.3.2
 	github.com/cilium/customvet v0.0.0-20221207181232-aa8731fa2d27
-	github.com/cilium/deepequal-gen v0.0.0-20200406125435-ad6a9003139e
+	github.com/cilium/deepequal-gen 754271daeec2
 	github.com/cilium/ebpf v0.10.0
 	github.com/cilium/ipam v0.0.0-20220824141044-46ef3d556735
 	github.com/cilium/kafka v0.0.0-20180809090225-01ce283b732b
@@ -36,7 +36,7 @@ require (
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/go-openapi/errors v0.20.3
 	github.com/go-openapi/loads v0.21.2
-	github.com/go-openapi/runtime v0.25.0
+	github.com/go-openapi/runtime v0.26.0
 	github.com/go-openapi/spec v0.20.8
 	github.com/go-openapi/strfmt v0.21.3
 	github.com/go-openapi/swag v0.22.3
@@ -62,9 +62,9 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.27.2
-	github.com/osrg/gobgp/v3 v3.12.0
+	github.com/osrg/gobgp/v3 v3.13.0
 	github.com/pmezard/go-difflib v1.0.0
-	github.com/prometheus/client_golang v1.14.0
+	github.com/prometheus/client_golang v1.15.0
 	github.com/prometheus/client_model v0.3.0
 	github.com/prometheus/procfs v0.9.0
 	github.com/russross/blackfriday/v2 v2.1.0
@@ -73,7 +73,7 @@ require (
 	github.com/shirou/gopsutil/v3 v3.23.2
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cast v1.5.0
-	github.com/spf13/cobra v1.6.1
+	github.com/spf13/cobra v1.7.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.15.0
 	github.com/spiffe/spire-api-sdk v1.6.1
@@ -89,21 +89,21 @@ require (
 	go.opentelemetry.io/otel/trace v1.14.0
 	go.uber.org/dig v1.16.1
 	go.uber.org/goleak v1.2.1
-	go.uber.org/multierr v1.10.0
+	go.uber.org/multierr v1.11.0
 	go.universe.tf/metallb v0.11.0
-	golang.org/x/crypto v0.7.0
-	golang.org/x/exp v0.0.0-20230310171629-522b1b587ee0
-	golang.org/x/net v0.8.0
+	golang.org/x/crypto v0.8.0
+	golang.org/x/exp 10a507213a29
+	golang.org/x/net v0.9.0
 	golang.org/x/sync v0.1.0
-	golang.org/x/sys v0.6.0
-	golang.org/x/term v0.6.0
+	golang.org/x/sys v0.7.0
+	golang.org/x/term v0.7.0
 	golang.org/x/time v0.3.0
-	golang.org/x/tools v0.7.0
-	golang.zx2c4.com/wireguard v0.0.0-20220920152132-bb719d3a6e2c
+	golang.org/x/tools v0.8.0
+	golang.zx2c4.com/wireguard 052af4a8072b
 	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20230215201556-9c5414ab4bde
-	google.golang.org/genproto v0.0.0-20230306155012-7f2fa6fef1f4
-	google.golang.org/grpc v1.53.0
-	google.golang.org/protobuf v1.29.1
+	google.golang.org/genproto daa745c078e1
+	google.golang.org/grpc v1.54.0
+	google.golang.org/protobuf v1.30.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
 	gopkg.in/ini.v1 v1.67.0
 	gopkg.in/yaml.v3 v3.0.1
