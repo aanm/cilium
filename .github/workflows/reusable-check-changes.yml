@@ -1,0 +1,38 @@
+name: Check For Changes
+
+on:
+  workflow_call:
+    inputs:
+      filters_path:
+        required: false
+        type: string
+      issue_comment_specific_trigger:
+        required: false
+        type: string
+      issue_comment_global_trigger:
+        required: false
+        type: string
+        default: "/test"
+    outputs:
+      tested:
+        description: "true if the tests should be executed"
+        value: ${{ jobs.check_changes.outputs.tested }}
+      head_sha:
+        description: "HEAD commit sha"
+        value: ${{ jobs.check_changes.outputs.head_sha }}
+
+jobs:
+  check_changes:
+    runs-on: ubuntu-latest
+    name: Deduce required tests from code changes
+    if: |
+      (github.event_name == 'issue_comment' && (
+        github.event.comment.body == ${{ inputs.issue_comment_specific_trigger }} ||
+        github.event.comment.body == ${{ inputs.issue_comment_global_trigger }}
+      )) ||
+      github.event_name == 'schedule' ||
+      github.event_name == 'pull_request'
+    uses: ./.github/actions/check-changes/action.yaml
+    with:
+      issue_comment: ${{ inputs.issue_comment }}
+      filters_path: ${{ inputs.filters_path }}

@@ -1,0 +1,59 @@
+name: Set Commit Status
+
+on:
+  workflow_call:
+    inputs:
+      check_url:
+        required: true
+        type: string
+      head_sha:
+        required: true
+        type: string
+      status:
+        required: true
+        description: "success|pending|failure|error|skipped"
+        type: string
+      test-name:
+        required: true
+        type: string
+
+jobs:
+  report:
+    name: Set commit status
+    steps:
+      - shell: bash
+        run: |
+          case ${{ input.status }} in
+            "success")
+              echo "description=${{ inputs.test-name }} successful" >> $GITHUB_OUTPUT
+              echo "state=success" >> $GITHUB_OUTPUT
+            ;;
+            "skipped")
+              echo "description=${{ inputs.test-name }} skipped" >> $GITHUB_OUTPUT
+              echo "state=success" >> $GITHUB_OUTPUT
+            ;;
+            "pending")
+              echo "description=${{ inputs.test-name }} in progress..." >> $GITHUB_OUTPUT
+              echo "state=pending" >> $GITHUB_OUTPUT
+            ;;
+            "failure")
+              echo "description=${{ inputs.test-name }} failed" >> $GITHUB_OUTPUT
+              echo "state=failure" >> $GITHUB_OUTPUT
+            ;;
+            "error")
+              echo "description=${{ inputs.test-name }} canceled" >> $GITHUB_OUTPUT
+              echo "state=error" >> $GITHUB_OUTPUT
+            ;;
+            *)
+            ;;
+          esac
+
+      - name: Set commit status to pending
+        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f # v1.1.6
+        with:
+          authToken: ${{ secrets.GITHUB_TOKEN }}
+          sha: ${{ inputs.head_sha }}
+          context: ${{ github.workflow }}
+          description: ${{ steps.description.outputs.description }}
+          state: ${{ input.status }}
+          target_url: ${{ inputs.check_url }}
