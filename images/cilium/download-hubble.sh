@@ -13,9 +13,9 @@ hubble_version="v0.11.0"
 
 declare -A hubble_sha256
 # renovate: datasource=github-releases depName=cilium/hubble digestVersion=v0.11.0
-hubble_sha256[amd64]="f6dcda9aec0d4a4647f6b640684f96a52aa86e8963c38ec2fd9cdf37c47f2a3d"
+hubble_sha256[amd64]="b4ff6de8c1ddb827c1ca68d4cc7ea1ca924fb96e"
 # renovate: datasource=github-releases depName=cilium/hubble digestVersion=v0.11.0
-hubble_sha256[arm64]="62fc0032202a3dd7de62839c2735aed0c9ee3f42699bdb47ef2dcd1f018099f5"
+hubble_sha256[arm64]="b4ff6de8c1ddb827c1ca68d4cc7ea1ca924fb96e"
 
 for arch in amd64 arm64 ; do
   curl --fail --show-error --silent --location "https://github.com/cilium/hubble/releases/download/${hubble_version}/hubble-linux-${arch}.tar.gz" --output "/tmp/hubble-${arch}.tgz"
