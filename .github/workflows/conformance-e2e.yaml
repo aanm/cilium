@@ -135,7 +135,7 @@ jobs:
 
       - shell: bash
         run: |
-          sleep 60s
+          sleep 59s
 
   report-success:
     runs-on: ubuntu-latest
