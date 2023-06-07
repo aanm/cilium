@@ -1,0 +1,204 @@
+name: Conformance Ginkgo Base
+
+on:
+  workflow_call:
+    inputs:
+      matrix:
+        required: true
+        type: string
+      sha:
+        required: true
+        type: string
+
+jobs:
+  conformance-ginkgo:
+    strategy:
+      fail-fast: false
+      max-parallel: 60
+      matrix: ${{ fromJSON(inputs.matrix) }}
+    name: "E2E Test (${{ matrix.k8s-version }}, ${{ matrix.focus }})"
+    env:
+      job_name: "E2E Test (${{ matrix.k8s-version }}, ${{ matrix.focus }})"
+    runs-on:
+      group: ginkgo-runners
+    timeout-minutes: 35
+    steps:
+      - name: Checkout pull request for tests
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+        with:
+          ref: ${{ inputs.sha }}
+          persist-credentials: false
+
+      - name: Set Environment Variables
+        uses: ./.github/actions/set-env-variables
+
+      - name: Install cilium-cli
+        shell: bash
+        run: |
+          cid=$(docker create quay.io/cilium/cilium-cli-ci:latest ls)
+          docker cp $cid:/usr/local/bin/cilium ./cilium-cli
+          docker rm $cid
+
+      - name: Install helm
+        shell: bash
+        run: |
+          HELM_VERSION=3.7.0
+          wget "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz"
+          tar -xf "helm-v${HELM_VERSION}-linux-amd64.tar.gz"
+          mv ./linux-amd64/helm ./helm
+
+      - name: Provision LVH VMs
+        uses: cilium/little-vm-helper@d04a0cf0ee684b1b249a320a0a6030ffda5eef30 # v0.0.5
+        with:
+          test-name: datapath-conformance
+          install-dependencies: true
+          image-version: ${{ matrix.kernel }}
+          host-mount: ./
+          cpu: 4
+          mem: 12G
+          dns-resolver: '1.1.1.1'
+          cmd: |
+            git config --global --add safe.directory /host
+            mv /host/helm /usr/bin
+
+      - name: Provision kind
+        timeout-minutes: 5
+        uses: cilium/little-vm-helper@d04a0cf0ee684b1b249a320a0a6030ffda5eef30 # v0.0.5
+        with:
+          provision: 'false'
+          cmd: |
+            cd /host/
+            if [[ "${{ matrix.kernel }}" == bpf-next-* ]]; then
+              ./contrib/scripts/kind.sh "" 2 "" "${{ matrix.kube-image }}" "none" "${{ matrix.ip-family }}"
+              kubectl label node kind-worker2 cilium.io/ci-node=kind-worker2
+              # Avoid re-labeling this node by setting "node-role.kubernetes.io/controlplane"
+              kubectl label node kind-worker2 node-role.kubernetes.io/controlplane=
+            else
+              ./contrib/scripts/kind.sh "" 1 "" "${{ matrix.kube-image }}" "iptables" "${{ matrix.ip-family }}"
+            fi
+            # Some tests using demo-customcalls.yaml are mounting this directoy
+            mkdir -p /home/vagrant/go/src/github.com/cilium
+            ln -s /host /home/vagrant/go/src/github.com/cilium/cilium
+            git config --add safe.directory /cilium
+
+      # Load Ginkgo build from GitHub
+      - name: Load Ginkgo build from GitHub
+        uses: actions/cache/restore@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3.3.1
+        id: cache
+        with:
+          path: /tmp/.ginkgo-build/
+          key: ${{ runner.os }}-ginkgo-e2e-${{ hashFiles('**/*.go') }}
+
+      - name: Copy Ginkgo binary
+        shell: bash
+        run: |
+          cd test/
+          tar -xf /tmp/.ginkgo-build/test.tgz
+
+      - name: Run tests
+        timeout-minutes: 40
+        uses: cilium/little-vm-helper@d04a0cf0ee684b1b249a320a0a6030ffda5eef30 # v0.0.5
+        with:
+          provision: 'false'
+          cmd: |
+            cd /host/test/
+            kubectl get ns -A -o wide
+            kubectl get pods -A -o wide
+            export K8S_NODES=2
+            export NETNEXT=0
+            if [[ "${{ matrix.kernel }}" == bpf-next-* ]]; then
+               export KERNEL=net-next
+               export NETNEXT=1
+               export KUBEPROXY=0
+               export K8S_NODES=3
+               export NO_CILIUM_ON_NODES=kind-worker2
+            elif [[ "${{ matrix.kernel }}" == 4.19-* ]]; then
+               export KERNEL=419
+            elif [[ "${{ matrix.kernel }}" == 5.4-* ]]; then
+               export KERNEL=54
+            fi
+            export K8S_VERSION=${{ matrix.k8s-version }}
+            export CNI_INTEGRATION=kind
+            export INTEGRATION_TESTS=true
+            # GitHub actions do not support IPv6 connectivity to outside
+            # world.
+            export CILIUM_NO_IPV6_OUTSIDE=true
+            echo "/root/go/bin/ginkgo \
+             --focus=\"${{ matrix.cliFocus }}\" \
+             --skip=\"${{ matrix.cliSkip }}\" \
+             --seed=1679952881 \
+             -v -- \
+             -cilium.provision=false \
+             -cilium.image=quay.io/${{ env.QUAY_ORGANIZATION_DEV }}/cilium-ci \
+             -cilium.tag=${{ matrix.sha }}  \
+             -cilium.operator-image=quay.io/${{ env.QUAY_ORGANIZATION_DEV }}/operator \
+             -cilium.operator-tag=${{ matrix.sha }} \
+             -cilium.hubble-relay-image=quay.io/${{ env.QUAY_ORGANIZATION_DEV }}/hubble-relay-ci \
+             -cilium.hubble-relay-tag=${{ matrix.sha }} \
+             -cilium.kubeconfig=/root/.kube/config \
+             -cilium.provision-k8s=false \
+             -cilium.operator-suffix=-ci"
+
+              ./test.test \
+               --ginkgo.focus="${{ matrix.cliFocus }}" \
+               --ginkgo.skip="${{ matrix.cliSkip }}" \
+               --ginkgo.seed=1679952881 \
+               --ginkgo.v -- \
+               -cilium.provision=false \
+               -cilium.image=quay.io/${{ env.QUAY_ORGANIZATION_DEV }}/cilium-ci \
+               -cilium.tag=${{ matrix.sha }}  \
+               -cilium.operator-image=quay.io/${{ env.QUAY_ORGANIZATION_DEV }}/operator \
+               -cilium.operator-tag=${{ matrix.sha }} \
+               -cilium.hubble-relay-image=quay.io/${{ env.QUAY_ORGANIZATION_DEV }}/hubble-relay-ci \
+               -cilium.hubble-relay-tag=${{ matrix.sha }} \
+               -cilium.kubeconfig=/root/.kube/config \
+               -cilium.provision-k8s=false \
+               -cilium.operator-suffix=-ci
+
+      - name: Fetch artifacts
+        if: ${{ !success() }}
+        uses: cilium/little-vm-helper@d04a0cf0ee684b1b249a320a0a6030ffda5eef30 # v0.0.5
+        with:
+          provision: 'false'
+          cmd: |
+            cd /host
+            kubectl get pods --all-namespaces -o wide
+            ./cilium-cli status
+            mkdir -p cilium-sysdumps
+            tar -zcf "test_results-${{ env.job_name }}.tar.gz" /host/test/test_results
+            ./cilium-cli sysdump --output-filename "cilium-sysdump-${{ env.job_name }}-final" || true
+
+      - name: Upload artifacts
+        if: ${{ !success() }}
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        with:
+          name: cilium-sysdumps
+          path: |
+            cilium-sysdump-*.zip
+            bugtool-*.tar.gz
+            test_results-*.tar.gz
+          retention-days: 5
+
+      - name: Fetch JUnits
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          mkdir -p cilium-junits
+          cd test/
+          junit_filename="${{ env.job_name }}.xml"
+          for filename in *.xml; do cp "${filename}" "../cilium-junits/${junit_filename}"; done;
+
+      - name: Upload JUnits [junit]
+        if: ${{ always() }}
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        with:
+          name: cilium-junits
+          path: |
+            cilium-junits/*.xml
+          retention-days: 2
+
+      - name: Publish Test Results As GitHub Summary
+        if: ${{ always() }}
+        uses: aanm/junit2md@86789108ea0fd9be947a4232dd560e2fa3b9467a # v0.0.1
+        with:
+          junit-directory: "cilium-junits"
