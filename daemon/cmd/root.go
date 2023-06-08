@@ -57,7 +57,7 @@ func runApp(cmd *cobra.Command, args []string) {
 	bootstrapStats.overall.Start()
 
 	if v, _ := cmd.Flags().GetBool("version"); v {
-		fmt.Printf("%s %s\n", cmd.Name(), version.Version)
+		fmt.Printf("Version %s %s\n", cmd.Name(), version.Version)
 		os.Exit(0)
 	}
 
