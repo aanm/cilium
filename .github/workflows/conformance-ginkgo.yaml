@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - pr/aanm-test-test-test
+  pull_request:
+    paths-ignore:
+      - 'Documentation/**'
+      - 'test/**'
 
 # By specifying the access of one of the scopes, all of those that are not
 # specified are set to 'none'.
@@ -13,8 +17,6 @@ permissions:
   contents: read
   # To allow retrieving information from the PR API
   pull-requests: read
-  # So that Sibz/github-status-action can write into the status API
-  statuses: write
 
 env:
   check_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -45,44 +47,16 @@ jobs:
       - name: Retrieve pull request's base and head
         id: sha
         run: |
-          if [ ${{ github.event.issue.pull_request || github.event.pull_request }} ]; then
-            curl ${{ github.event.issue.pull_request.url }} > pr.json
-            echo "base=$(jq -r '.base.sha' pr.json)" >> $GITHUB_OUTPUT
-            echo "head=$(jq -r '.head.sha' pr.json)" >> $GITHUB_OUTPUT
-            echo "sha=$(jq -r '.head.sha' pr.json)" >> $GITHUB_OUTPUT
-            echo "base_branch=${{ github.base_ref }}" >> $GITHUB_OUTPUT
-          else
-            echo "sha=${{ github.sha }}" >> $GITHUB_OUTPUT
-            echo "base_branch=${{ github.ref_name }}" >> $GITHUB_OUTPUT
-          fi
+          echo "sha=${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "base_branch=${{ github.ref_name }}" >> $GITHUB_OUTPUT
       - name: Check code changes
         if: ${{ github.event.issue.pull_request }}
         uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # v2.11.1
         id: tested-tree
         with:
-          base: ${{ steps.sha.outputs.base }}
-          ref: ${{ steps.sha.outputs.head }}
           filters: |
             src:
               - '!(Documentation)/**'
-
-  skip-test-run:
-    # If the modified files are not relevant for this test then we can skip
-    # this test and mark it as successful.
-    if: github.event.comment.body == '/test' && needs.check_changes.outputs.tested == 'false'
-    runs-on: ubuntu-latest
-    needs: check_changes
-    name: Set commit status to success (skipped)
-    steps:
-      - name: Set commit status to success
-        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f # v1.1.6
-        with:
-          authToken: ${{ secrets.GITHUB_TOKEN }}
-          sha: ${{ needs.check_changes.outputs.sha }}
-          context: ${{ github.workflow }}
-          description: Ginkgo test skipped
-          state: success
-          target_url: ${{ env.check_url }}
 
   # Pre-build the ginkgo binary so that we don't have to build it for all
   # runners.
@@ -92,16 +66,6 @@ jobs:
     name: Build Ginkgo E2E
     timeout-minutes: 30
     steps:
-      - name: Set commit status to pending
-        uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f # v1.1.6
-        with:
-          authToken: ${{ secrets.GITHUB_TOKEN }}
-          sha: ${{ needs.check_changes.outputs.sha }}
-          context: ${{ github.workflow }}
-          description: Ginkgo test in progress...
-          state: pending
-          target_url: ${{ env.check_url }}
-
       - name: Checkout code
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
@@ -219,48 +183,3 @@ jobs:
     with:
       matrix: ${{ needs.generate-matrix.outputs.matrix }}
       sha: ${{ needs.check_changes.outputs.sha }}
-
-  report-success:
-    runs-on: ubuntu-latest
-    needs: [check_changes, setup-and-test]
-    name: Set commit status to success
-    if: ${{ success() }}
-    steps:
-      - uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f # v1.1.6
-        with:
-          authToken: ${{ secrets.GITHUB_TOKEN }}
-          sha: ${{ needs.check_changes.outputs.sha }}
-          context: ${{ github.workflow }}
-          description: Gingko test successful
-          state: success
-          target_url: ${{ env.check_url }}
-
-  report-failure:
-    runs-on: ubuntu-latest
-    needs: [check_changes, setup-and-test]
-    name: Set commit status to failure
-    if: ${{ failure() }}
-    steps:
-      - uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f # v1.1.6
-        with:
-          authToken: ${{ secrets.GITHUB_TOKEN }}
-          sha: ${{ needs.check_changes.outputs.sha }}
-          context: ${{ github.workflow }}
-          description: Gingko test failed
-          state: failure
-          target_url: ${{ env.check_url }}
-
-  report-cancelled:
-    runs-on: ubuntu-latest
-    needs: [check_changes, setup-and-test]
-    name: Set commit status to cancelled
-    if: ${{ cancelled() }}
-    steps:
-      - uses: Sibz/github-status-action@650dd1a882a76dbbbc4576fb5974b8d22f29847f # v1.1.6
-        with:
-          authToken: ${{ secrets.GITHUB_TOKEN }}
-          sha: ${{ needs.check_changes.outputs.sha }}
-          context: ${{ github.workflow }}
-          description: Gingko test cancelled
-          state: error
-          target_url: ${{ env.check_url }}

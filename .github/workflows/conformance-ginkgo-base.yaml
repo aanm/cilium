@@ -19,8 +19,7 @@ jobs:
     name: "E2E Test (${{ matrix.k8s-version }}, ${{ matrix.focus }})"
     env:
       job_name: "E2E Test (${{ matrix.k8s-version }}, ${{ matrix.focus }})"
-    runs-on:
-      group: ginkgo-runners
+    runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
       - name: Checkout pull request for tests
