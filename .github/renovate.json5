@@ -164,6 +164,41 @@
       ]
     },
     {
+      "groupName": "all external docker images dependencies",
+      "groupSlug": "all-external-images-deps-main",
+      "matchFiles": [
+        "install/kubernetes/Makefile.values"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "digest",
+        "patch",
+        "pin",
+        "pinDigest"
+      ],
+      "schedule": [
+        "on monday"
+      ],
+      matchBaseBranches: [
+        "main"
+      ]
+    },
+    {
+      // Do not allow any updates into stable branches.
+      "enabled": false,
+      "groupName": "all external docker images dependencies",
+      "groupSlug": "all-external-images-deps-stable",
+      "matchFiles": [
+        "install/kubernetes/Makefile.values"
+      ],
+      matchBaseBranches: [
+        "v1.14",
+        "v1.13",
+        "v1.12"
+      ]
+    },
+    {
       // Images that directly use docker.io/library/golang for building.
       "groupName": "golang-images",
       "matchFiles": [
@@ -415,6 +450,17 @@
       //   https://docs.renovatebot.com/modules/manager/regex/#advanced-capture
       "matchStrings": [
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s+.+_VERSION = (?<currentValue>.*)\\s+.+_SHA = (?<currentDigest>sha256:[a-f0-9]+)"
+      ]
+    },
+    {
+      "fileMatch": [
+        "^install/kubernetes/Makefile\\.values$"
+      ],
+      // This regex manages version strings in the Makefile.defs file,
+      // similar to the examples shown here:
+      //   https://docs.renovatebot.com/modules/manager/regex/#advanced-capture
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>.*?)\\s+.+_REPO:=(?<depName>.*?)\\s+.+_VERSION:=(?<currentValue>.*)\\s+.+_DIGEST:=(?<currentDigest>sha256:[a-f0-9]+)"
       ]
     },
     {
