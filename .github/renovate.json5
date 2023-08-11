@@ -147,9 +147,6 @@
         // dependency manually.
         "github.com/onsi/ginkgo",
         "github.com/onsi/gomega/*",
-        // k8s dependencies will be updated manually along with tests
-        "k8s.io/*",
-        "sigs.k8s.io/*"
       ]
     },
     {
@@ -408,6 +405,29 @@
         "quay.io/cilium/kindest-node"
       ],
       "ignoreUnstable": false,
+    },
+    {
+      "matchPackagePatterns": [
+        "k8s.io/*",
+        "sigs.k8s.io/*",
+      ],
+      "matchUpdateTypes": [
+        "digest",
+        "patch",
+        "pin",
+        "pinDigest"
+      ]
+    },
+    {
+      "enabled": false,
+      "matchPackagePatterns": [
+        "k8s.io/*",
+        "sigs.k8s.io/*",
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+      ]
     }
   ],
   "kubernetes": {
