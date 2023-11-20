@@ -260,7 +260,7 @@ jobs:
 
       - name: Upgrade Cilium & Test (${{ matrix.name }})
         # renovate: branchName=v1.14
-        uses: cilium/cilium/.github/actions/conn-disrupt-test@d42be92482e5568f5899626b95df369b39d03276
+        uses: cilium/cilium/.github/actions/conn-disrupt-test@d25d328955273c55814729548cb7dc32bce51c14
         with:
           job-name: ipsec-upgrade-${{ matrix.name }}
           # Disable no-missed-tail-calls due to https://github.com/cilium/cilium/issues/26739
@@ -278,7 +278,7 @@ jobs:
 
       - name: Downgrade Cilium to ${{ env.cilium_stable_version }} & Test (${{ matrix.name }})
         # renovate: branchName=v1.14
-        uses: cilium/cilium/.github/actions/conn-disrupt-test@d42be92482e5568f5899626b95df369b39d03276
+        uses: cilium/cilium/.github/actions/conn-disrupt-test@d25d328955273c55814729548cb7dc32bce51c14
         with:
           job-name: ipsec-downgrade-${{ matrix.name }}
           # Disable no-missed-tail-calls due to https://github.com/cilium/cilium/issues/26739
