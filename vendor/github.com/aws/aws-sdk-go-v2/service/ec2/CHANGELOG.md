@@ -1,3 +1,25 @@
+# v1.137.1 (2023-11-21)
+
+* **Documentation**: Documentation updates for Amazon EC2.
+
+# v1.137.0 (2023-11-20)
+
+* **Feature**: This release adds support for Security group referencing over Transit gateways, enabling you to simplify Security group management and control of instance-to-instance traffic across VPCs that are connected by Transit gateway.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.136.0 (2023-11-17)
+
+* **Feature**: This release adds new features for Amazon VPC IP Address Manager (IPAM) Allowing a choice between Free and Advanced Tiers, viewing public IP address insights across regions and in Amazon Cloudwatch, use IPAM to plan your subnet IPs within a VPC and bring your own autonomous system number to IPAM.
+
+# v1.135.0 (2023-11-16)
+
+* **Feature**: Enable use of tenant-specific PublicSigningKeyUrl from device trust providers and onboard jumpcloud as a new device trust provider.
+
+# v1.134.0 (2023-11-15)
+
+* **Feature**: AWS EBS now supports Snapshot Lock, giving users the ability to lock an EBS Snapshot to prohibit deletion of the snapshot. This release introduces the LockSnapshot, UnlockSnapshot & DescribeLockedSnapshots APIs to manage lock configuration for snapshots. The release also includes the dl2q_24xlarge.
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.133.0 (2023-11-13)
 
 * **Feature**: Adds the new EC2 DescribeInstanceTopology API, which you can use to retrieve the network topology of your running instances on select platform types to determine their relative proximity to each other.
