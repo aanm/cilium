@@ -261,7 +261,7 @@ jobs:
           test-name: runtime-tests
           install-dependencies: true
           # renovate: datasource=docker depName=quay.io/lvh-images/kind
-          image-version: "bpf-next-20231030.012704@sha256:1b69d3a852cc36eabb3b563ef1d0a26a8293d8b72bb954dbf34da63531d917e2"
+          image-version: "bpf-next-20240114.013131@sha256:3bde3641b1a8dc437f19ababa4545a86dc3f11374395a0c29a3a6cc580a6e3ac"
           host-mount: ./
           cpu: 4
           mem: 12G
