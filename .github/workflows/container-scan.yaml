@@ -31,7 +31,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
       - name: Build local container
-        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
+        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0
         with:
           context: . 
           tags: ${{ matrix.image.name }}:${{ matrix.branch }}
@@ -41,7 +41,7 @@ jobs:
           build-args: |
             OPERATOR_VARIANT=${{ matrix.image.name }}
       - name: Scan image
-        uses: anchore/scan-action@24fd7c9060f3c96848dd1929fac8d796fb5ae4b4 # v3.3.6
+        uses: anchore/scan-action@0550541809b9c6abbf7cbc43d12400db47056507 # v3.6.0
         with:
           image: ${{ matrix.image.name }}:${{ matrix.branch }}
           output-format: table

@@ -287,7 +287,7 @@ jobs:
 
       - name: Rotate IPsec Key & Test (${{ join(matrix.*, ', ') }})
         # renovate: branchName=v1.14
-        uses: cilium/cilium/.github/actions/conn-disrupt-test@d42be92482e5568f5899626b95df369b39d03276
+        uses: cilium/cilium/.github/actions/conn-disrupt-test@5a0698cb4e751474af8ed43879e4dcf7c41d1445
         with:
           job-name: conformance-ipsec-e2e-key-rotation-${{ matrix.name }}
           operation-cmd: |
