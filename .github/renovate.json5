@@ -489,12 +489,6 @@
         "kindest/node",
         "quay.io/cilium/kindest-node"
       ],
-      "matchUpdateTypes": [
-        "digest",
-        "patch",
-        "pin",
-        "pinDigest"
-      ],
     },
     {
       // Do not allow any updates for major.minor, they will be done by maintainers
