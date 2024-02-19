@@ -247,6 +247,22 @@
       ],
     },
     {
+      // Files that directly use gcr.io/etcd-development/etcd.
+      "groupName": "etcd-images",
+      "matchFiles": [
+        "images/clustermesh-apiserver/Dockerfile",
+        ".github/actions/kvstore/action.yaml",
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "digest",
+        "patch",
+        "pin",
+        "pinDigest"
+      ],
+    },
+    {
       "groupName": "spire-images",
       "matchFiles": [
         "install/kubernetes/cilium/values.yaml.tmpl"
@@ -360,6 +376,15 @@
       "allowedVersions": "<3.17",
       "matchBaseBranches": [
         "v1.12"
+      ]
+    },
+    {
+      "matchPackageNames": [
+        "gcr.io/etcd-development/etcd"
+      ],
+      "allowedVersions": "<3.16",
+      "matchBaseBranches": [
+        "v1.15"
       ]
     },
     {
