@@ -99,14 +99,6 @@
         // update source import paths on major updates
         "gomodUpdateImportPaths"
       ],
-      "matchUpdateTypes": [
-        "major",
-        "minor",
-        "digest",
-        "patch",
-        "pin",
-        "pinDigest"
-      ],
       matchBaseBranches: [
         "main"
       ]
@@ -184,6 +176,8 @@
       ]
     },
     {
+      // Grouped these together because they require a re-creation of the base
+      // image.
       "groupName": "base-images",
       "matchFiles": [
         "images/builder/Dockerfile",
@@ -192,76 +186,6 @@
       "matchPackageNames": [
         "docker.io/library/golang"
       ],
-    },
-    {
-      // Images that directly use docker.io/library/golang for building.
-      "groupName": "golang-images",
-      "matchFiles": [
-        "contrib/backporting/Dockerfile",
-        "images/cilium-docker-plugin/Dockerfile",
-        "images/clustermesh-apiserver/Dockerfile",
-        "images/hubble-relay/Dockerfile",
-        "images/operator/Dockerfile",
-        "images/kvstoremesh/Dockerfile"
-      ],
-      "matchUpdateTypes": [
-        "major",
-        "minor",
-        "digest",
-        "patch",
-        "pin",
-        "pinDigest"
-      ]
-    },
-    {
-      // Images that directly use docker.io/library/alpine for building.
-      "groupName": "alpine-images",
-      "matchFiles": [
-        "contrib/coccinelle/Dockerfile",
-        "images/cache/Dockerfile",
-        "images/clustermesh-apiserver/Dockerfile",
-        "images/hubble-relay/Dockerfile",
-        "images/operator/Dockerfile",
-        "images/kvstoremesh/Dockerfile"
-      ],
-      "matchUpdateTypes": [
-        "major",
-        "minor",
-        "digest",
-        "patch",
-        "pin",
-        "pinDigest"
-      ],
-    },
-    {
-      // Files that directly use gcr.io/etcd-development/etcd.
-      "groupName": "etcd-images",
-      "matchFiles": [
-        "images/clustermesh-apiserver/Dockerfile",
-        ".github/actions/kvstore/action.yaml",
-      ],
-      "matchUpdateTypes": [
-        "major",
-        "minor",
-        "digest",
-        "patch",
-        "pin",
-        "pinDigest"
-      ],
-    },
-    {
-      "groupName": "spire-images",
-      "matchFiles": [
-        "install/kubernetes/cilium/values.yaml.tmpl"
-      ],
-      "matchPackageNames": [
-        "ghcr.io/spiffe/spire-agent",
-        "ghcr.io/spiffe/spire-server"
-      ],
-      "matchBaseBranches": [
-        "main"
-      ],
-      "allowedVersions": ">1.6"
     },
     {
       "groupName": "spire-images",
@@ -297,15 +221,6 @@
       "matchBaseBranches": [
         "v1.12"
       ],
-    },
-    {
-      "matchPackageNames": [
-        "docker.io/library/busybox"
-      ],
-      "allowedVersions": ">=1.35",
-      "matchPaths": [
-        "install/kubernetes/cilium/templates/spire/**"
-      ]
     },
     {
       "matchPackageNames": [
