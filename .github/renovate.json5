@@ -80,17 +80,6 @@
         "quay.io/lvh-images/kind",
         "quay.io/cilium/kindest-node"
       ],
-      "matchUpdateTypes": [
-        "major",
-        "minor",
-        "digest",
-        "patch",
-        "pin",
-        "pinDigest"
-      ],
-      "schedule": [
-        "on monday"
-      ]
     },
     {
       "matchPaths": [
