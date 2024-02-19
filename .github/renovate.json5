@@ -217,6 +217,14 @@
         "images/operator/Dockerfile",
         "images/kvstoremesh/Dockerfile"
       ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "digest",
+        "patch",
+        "pin",
+        "pinDigest"
+      ]
     },
     {
       // Images that directly use docker.io/library/alpine for building.
@@ -228,6 +236,14 @@
         "images/hubble-relay/Dockerfile",
         "images/operator/Dockerfile",
         "images/kvstoremesh/Dockerfile"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "digest",
+        "patch",
+        "pin",
+        "pinDigest"
       ],
     },
     {
