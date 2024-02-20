@@ -153,5 +153,12 @@
       ],
       "datasourceTemplate": "docker"
     }
+  ],
+  "rangeStrategy": "bump",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "major","patch"],
+      "groupName": "all-dependencies"
+    }
   ]
 }
