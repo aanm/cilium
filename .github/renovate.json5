@@ -345,9 +345,9 @@
       // Group golangci-lint updates to overrule grouping of version updates in the GHA files.
       // Without this, golangci-lint updates are not in sync for GHA files and other usages.
       "groupName": "golangci-lint",
-      "matchDepNames": [
-        "golangci/golangci-lint"
-      ]
+      "matchDepPatterns": [
+        "^golangci/golangci-lint$"
+      ],
     },
     {
       // Do not allow any updates into stable branches.
