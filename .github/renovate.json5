@@ -413,6 +413,16 @@
       ],
     },
     {
+      "matchPackageNames": [
+        "quay.io/lvh-images/complexity-test",
+        "quay.io/lvh-images/kind",
+        "kindest/node",
+        "quay.io/cilium/kindest-node"
+      ],
+      "separateMajorMinor": true,
+      "separateMinorPatch": true
+    },
+    {
       // Do not allow any updates for major.minor, they will be done by maintainers
       "enabled": false,
       "matchPackageNames": [
