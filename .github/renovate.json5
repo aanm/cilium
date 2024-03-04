@@ -48,7 +48,7 @@
   "ignorePresets": [":prHourlyLimit2"],
   // We don't want to separate major and minor upgrades in separate PRs since
   // we can upgrade them together in a single PR.
-  "separateMajorMinor": false,
+  "separateMajorMinor": true,
   // We don't want to separate minor patch upgrades in separate PRs since
   // we can upgrade them together in a single PR.
   "separateMinorPatch": false,
