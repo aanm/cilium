@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a20fedeb_32e3cc3d",
+        "filename": "go.mod",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1017884
+      },
+      "writtenOn": "2024-03-07T20:35:16Z",
+      "side": 1,
+      "message": "This could be different",
+      "revId": "20d007fa009edfbda305c6ad1460b48ac6c5ef48",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
