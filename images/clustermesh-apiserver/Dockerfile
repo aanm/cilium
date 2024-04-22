@@ -12,7 +12,7 @@ ARG GOLANG_IMAGE=docker.io/library/golang:1.21.7@sha256:b7bac393658f891b69189cfd
 ARG ALPINE_IMAGE=docker.io/library/alpine:3.19.1@sha256:c5b1261d6d3e43071626931fc004f70149baeba2c8ec672bd4f27761f8e1ad6b
 # We don't use ETCD_IMAGE because that's used in Makefile.defs to select a ETCD image approrpate for the *host platform*
 # to run tests with.
-ARG ETCD_SERVER_IMAGE=gcr.io/etcd-development/etcd:v3.5.11@sha256:8eff25cf636711fb48426005b55fc9f4d6ffa4f38f483fa87c8cc82976347bbb
+ARG ETCD_SERVER_IMAGE=gcr.io/etcd-development/etcd:v3.5.13@sha256:f435f2be55ca8fbaa56126419f3d0d3a43695a856ffcb7e51a3b82dcab784c14
 
 # BUILDPLATFORM is an automatic platform ARG enabled by Docker BuildKit.
 # Represents the plataform where the build is happening, do not mix with
