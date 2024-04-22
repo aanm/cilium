@@ -32,7 +32,7 @@ jobs:
 
       - name: Cache LLVM and Clang
         id: cache-llvm
-        uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           path: ${{ steps.set_clang_dir.outputs.clang_dir }}
           key: llvm-10.0
@@ -43,7 +43,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends libtinfo5
 
       - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@be40c5af3a4adc3e4a03199995ab73aa37536712 # v1.9.0
+        uses: KyleMayes/install-llvm-action@8b37482c5a2997a3ab5dbf6561f8109e2eaa7d3b # v2.0.2
         with:
           version: "10.0"
           directory: ${{ steps.set_clang_dir.outputs.clang_dir }}
@@ -71,7 +71,7 @@ jobs:
           git rebase --exec "make build -j $(nproc)" $PR_PARENT_SHA
 
       - name: Check bpf code changes
-        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # v2.11.1
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
         id: bpf-tree
         with:
           filters: |
@@ -91,7 +91,7 @@ jobs:
           git rebase --exec "make -C bpf build_all -j $(nproc)" $PR_PARENT_SHA
 
       - name: Check test code changes
-        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # v2.11.1
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
         id: test-tree
         with:
           filters: |
