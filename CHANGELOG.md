@@ -1,5 +1,39 @@
 # Changelog
 
+## v1.14.11
+
+Summary of Changes
+------------------
+
+**Bugfixes:**
+* fqdn: fix memory leak in transparent mode when there was a moderately high number of parallel DNS requests (>100). (Backport PR #32104, Upstream PR #31959, @marseel)
+* operator: fix errors/warnings metric. (Backport PR #31907, Upstream PR #31214, @tommyp1ckles)
+
+**CI Changes:**
+* alibabacloud/eni: avoid racing node mgr in test (Backport PR #31987, Upstream PR #31877, @bimmlerd)
+* gha: configure fully-qualified DNS names as external targets (Backport PR #32104, Upstream PR #31510, @giorio94)
+* gha: drop double installation of Cilium CLI in conformance-eks (Backport PR #32104, Upstream PR #32042, @giorio94)
+* Miscellaneous improvements to the clustermesh upgrade/downgrade test (Backport PR #32104, Upstream PR #31958, @giorio94)
+* test: De-flake xds server_e2e_test (Backport PR #32104, Upstream PR #32004, @jrajahalme)
+
+**Misc Changes:**
+* chore(deps): update all github action dependencies (v1.14) (#31997, @renovate[bot])
+* chore(deps): update all github action dependencies (v1.14) (#32109, @renovate[bot])
+* chore(deps): update cilium/cilium-cli action to v0.16.4 (v1.14) (#32110, @renovate[bot])
+* chore(deps): update hubble cli to v0.13.3 (v1.14) (#32111, @renovate[bot])
+* Docs: mark Tetragon as Stable (Backport PR #31987, Upstream PR #31886, @sharlns)
+* Document Cluster Mesh global services limitations when KPR=false (Backport PR #31987, Upstream PR #31798, @giorio94)
+* golangci: Enable errorlint (Backport PR #31793, Upstream PR #31458, @jrajahalme)
+* Improve release organization page (Backport PR #31987, Upstream PR #31970, @joestringer)
+* Remove cilium/build from codeowners (#32146, @joestringer)
+
+**Other Changes:**
+* [v1.14-backport] Introduce fromEgressProxyRule (#31926, @jschwinger233)
+* ci: no longer suppported v1.25 in GKE (#32183, @marseel)
+* envoy: Bump envoy version to v1.27.5 (#32078, @sayboras)
+* fix k8s versions tested in CI (#31969, @nbusseneau)
+* install: Update image digests for v1.14.10 (#31914, @asauber)
+
 ## v1.14.10
 
 Summary of Changes
