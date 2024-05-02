@@ -1,54 +1,5 @@
 # Changelog
 
-## v1.14.11
-
-Summary of Changes
-------------------
-
-**Bugfixes:**
-* Agent: add kubeconfigPath to initContainers (Backport PR #32251, Upstream PR #32008, @darox)
-* dnsproxy: Fix bug where DNS request timed out too soon (Backport PR #32251, Upstream PR #31999, @gandro)
-* envoy: pass idle timeout configuration option to cilium configmap (Backport PR #32251, Upstream PR #32203, @mhofstetter)
-* Fixes a bug where Cilium in chained mode removed the `agent-not-ready` taint too early if the primary network is slow in deploying. (Backport PR #32251, Upstream PR #32168, @squeed)
-* fqdn: fix memory leak in transparent mode when there was a moderately high number of parallel DNS requests (>100). (Backport PR #32104, Upstream PR #31959, @marseel)
-* ipam: retry netlink.LinkList call when setting up ENI devices (Backport PR #32251, Upstream PR #32099, @jasonaliyetti)
-* operator: fix errors/warnings metric. (Backport PR #31907, Upstream PR #31214, @tommyp1ckles)
-
-**CI Changes:**
-* alibabacloud/eni: avoid racing node mgr in test (Backport PR #31987, Upstream PR #31877, @bimmlerd)
-* ci: Increase timeout for images for l4lb test (Backport PR #32251, Upstream PR #32201, @marseel)
-* gha: configure fully-qualified DNS names as external targets (Backport PR #32104, Upstream PR #31510, @giorio94)
-* gha: drop double installation of Cilium CLI in conformance-eks (Backport PR #32104, Upstream PR #32042, @giorio94)
-* Miscellaneous improvements to the clustermesh upgrade/downgrade test (Backport PR #32104, Upstream PR #31958, @giorio94)
-* test: De-flake xds server_e2e_test (Backport PR #32104, Upstream PR #32004, @jrajahalme)
-* workflows: Fix CI jobs for push events on private forks (Backport PR #32251, Upstream PR #32085, @pchaigno)
-
-**Misc Changes:**
-* build(deps): bump pydantic from 2.3.0 to 2.4.0 in /Documentation (Backport PR #32251, Upstream PR #32176, @dependabot[bot])
-* chore(deps): update all github action dependencies (v1.14) (#31997, @renovate[bot])
-* chore(deps): update all github action dependencies (v1.14) (#32109, @renovate[bot])
-* chore(deps): update cilium/cilium-cli action to v0.16.4 (v1.14) (#32110, @renovate[bot])
-* chore(deps): update docker.io/library/golang:1.21.9 docker digest to 81811f8 (v1.14) (#31995, @renovate[bot])
-* chore(deps): update hubble cli to v0.13.3 (v1.14) (#32111, @renovate[bot])
-* CI: bump default FQDN datapath timeout from 100 to 250ms (Backport PR #32251, Upstream PR #31866, @squeed)
-* docs: Fix prometheus port regex (Backport PR #32251, Upstream PR #32030, @JBodkin-Amphora)
-* Docs: mark Tetragon as Stable (Backport PR #31987, Upstream PR #31886, @sharlns)
-* Document Cluster Mesh global services limitations when KPR=false (Backport PR #31987, Upstream PR #31798, @giorio94)
-* endpoint: Skip build queue warning log is context is canceled (Backport PR #32251, Upstream PR #32132, @jrajahalme)
-* golangci: Enable errorlint (Backport PR #31793, Upstream PR #31458, @jrajahalme)
-* Improve release organization page (Backport PR #31987, Upstream PR #31970, @joestringer)
-* install/kubernetes: update nodeinit image to latest version (Backport PR #32251, Upstream PR #32181, @tklauser)
-* l7 policy: add possibility to configure Envoy proxy xff-num-trusted-hops (Backport PR #32265, Upstream PR #32200, @mhofstetter)
-* Remove aks-preview from AKS workflows (Backport PR #32251, Upstream PR #32118, @marseel)
-* Remove cilium/build from codeowners (#32146, @joestringer)
-
-**Other Changes:**
-* [v1.14-backport] Introduce fromEgressProxyRule (#31926, @jschwinger233)
-* ci: no longer suppported v1.25 in GKE (#32183, @marseel)
-* envoy: Bump envoy version to v1.27.5 (#32078, @sayboras)
-* fix k8s versions tested in CI (#31969, @nbusseneau)
-* install: Update image digests for v1.14.10 (#31914, @asauber)
-
 ## v1.14.10
 
 Summary of Changes
