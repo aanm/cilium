@@ -6,8 +6,8 @@
     "helpers:pinGitHubActionDigests"
   ],
   // self-hosted configuration
-  "username": "cilium-renovate[bot]",
-  "repositories": ["cilium/cilium"],
+  "username": "private-renovate[bot]",
+  "repositories": ["aanm/cilium"],
   // renovate first reads this configuration, then reads the repository
   // configuration, since we don't split between the self-hosted and the
   // repository configuration, this can lead to duplicate of some areas of the
@@ -81,17 +81,6 @@
     "^make -C install/kubernetes$",
     "^make -C Documentation update-helm-values$",
   ],
-  "postUpgradeTasks": {
-    "commands": [
-      "make -C install/kubernetes",
-      "make -C Documentation update-helm-values"
-    ],
-    "fileFilters": [
-      "VERSION",
-      "install/kubernetes/**"
-    ],
-    "executionMode": "update"
-  },
   "packageRules": [
     {
       // Try to group all updates for all dependencies in a single PR. More
@@ -232,6 +221,19 @@
         "main"
       ],
       "allowedVersions": ">1.6",
+      "postUpgradeTasks": {
+        "commands": [
+          "make -C install/kubernetes",
+          "make -C Documentation update-helm-values"
+        ],
+        "fileFilters": [
+          "install/kubernetes/Makefile.values",
+          "install/kubernetes/cilium/README.md",
+          "install/kubernetes/cilium/values.yaml",
+          "Documentation/helm-values.rst"
+        ],
+        "executionMode": "update"
+      }
     },
     {
       "groupName": "spire-images",
@@ -246,6 +248,19 @@
         "v1.14"
       ],
       "allowedVersions": "<1.7",
+      "postUpgradeTasks": {
+        "commands": [
+          "make -C install/kubernetes",
+          "make -C Documentation update-helm-values"
+        ],
+        "fileFilters": [
+          "install/kubernetes/Makefile.values",
+          "install/kubernetes/cilium/README.md",
+          "install/kubernetes/cilium/values.yaml",
+          "Documentation/helm-values.rst"
+        ],
+        "executionMode": "update"
+      }
     },
     {
       "matchPackageNames": [
