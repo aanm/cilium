@@ -541,24 +541,6 @@
       "ignoreUnstable": false
     },
     {
-      "matchFiles": [
-        "install/kubernetes/Makefile.values"
-      ],
-      "postUpgradeTasks": {
-        "commands": [
-          "make -C install/kubernetes",
-          "make -C Documentation update-helm-values"
-        ],
-        "fileFilters": [
-          "install/kubernetes/Makefile.values",
-          "install/kubernetes/cilium/README.md",
-          "install/kubernetes/cilium/values.yaml",
-          "Documentation/helm-values.rst"
-        ],
-        "executionMode": "update"
-      }
-    },
-    {
       enabled: false,
       matchDepPatterns: [
         // k8s dependencies will be updated manually along with tests
