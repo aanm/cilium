@@ -575,6 +575,16 @@
         "grpc/grpc-go"
       ],
       "versioning": "regex:cmd/protoc-gen-go-grpc/v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)",
+      "extractVersion": "^google\\.golang\\.org/grpc/cmd/protoc-gen-go-grpc@cmd/protoc-gen-go-grpc/v(?<version>.*)$",
+      "packageRules": [
+        {
+          "matchDatasources": ["github-releases"],
+          "matchPackageNames": ["grpc/grpc-go"],
+          "registryUrls": ["https://github.com/grpc/grpc-go"],
+          "extractVersion": "^cmd/protoc-gen-go-grpc/v(?<version>.*)$",
+          "replaceStringTemplate": "go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@{{{newDigest}}}"
+        }
+      ]
     }
   ],
   "kubernetes": {
