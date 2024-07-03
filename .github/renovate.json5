@@ -574,7 +574,7 @@
       "matchDepNames": [
         "grpc/grpc-go"
       ],
-      "versioning": "regex:google\\.golang\\.org/grpc/cmd/protoc-gen-go-grpc/v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)",
+      "versioning": "regex:cmd/protoc-gen-go-grpc/v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)",
     }
   ],
   "kubernetes": {

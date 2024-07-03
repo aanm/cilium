@@ -9,7 +9,7 @@ set -o pipefail
 set -o nounset
 
 # renovate: datasource=github-releases depName=grpc/grpc-go
-go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@8ba23be9613c672d40ae261d2a1335d639bdd59b
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2.0
 # renovate: datasource=github-releases depName=protocolbuffers/protobuf-go
 go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.31.0
 # renovate: datasource=github-releases depName=mfridman/protoc-gen-go-json
