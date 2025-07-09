@@ -561,3 +561,14 @@ jobs:
         with:
           sha: ${{ inputs.SHA || github.sha }}
           status: ${{ steps.commit-status.outputs.status }}
+
+  rerun-on-failure:
+    needs: setup-and-test
+    if: failure() && fromJSON(github.run_attempt) < 3
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: api
+        run: gh workflow run rerun.yml -F run_id=${{ github.run_id }}
