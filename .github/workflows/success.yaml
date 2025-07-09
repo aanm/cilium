@@ -16,3 +16,23 @@ jobs:
 
       - name: Run a successful command
         run: echo "This will succeed"
+
+      - name: Randomly fail 50% of the time
+        run: |
+          if [ $((RANDOM % 2)) -eq 0 ]; then
+            echo "Random failure occurred!"
+            exit 1
+          else
+            echo "Lucky! This time it succeeded."
+          fi
+
+  rerun-on-failure:
+    needs: always_succeed_job
+    if: failure() && fromJSON(github.run_attempt) < 3
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: api
+        run: gh workflow run ci-re-run.yaml -F run_id=${{ github.run_id }}
