@@ -33,7 +33,7 @@ jobs:
           cat > test-results/sponge_log.xml << 'EOF'
           <?xml version="1.0" encoding="UTF-8"?>
           <testsuites>
-            <testsuite name="always_succeed_job" tests="2" failures="0" errors="0" time="1.0">
+            <testsuite name="always_succeed_job" tests="2" failures="${{ job.status == 'failure' && '1' || '0' }}" errors="0" time="1.0">
               <testcase name="Run a successful command" classname="always_succeed_job" time="0.1">
               </testcase>
               <testcase name="Randomly fail 50% of the time" classname="always_succeed_job" time="0.9">
