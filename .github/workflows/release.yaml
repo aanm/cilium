@@ -33,7 +33,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.inputs.version }}
+  group: ${{ github.workflow }}-${{ github.event.inputs.version }}-${{ github.event.inputs.step }}
   cancel-in-progress: true
 
 jobs:
