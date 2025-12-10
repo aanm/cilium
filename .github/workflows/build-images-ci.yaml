@@ -3,6 +3,10 @@ name: Image CI Build
 # Any change in triggers needs to be reflected in the concurrency group.
 on:
   pull_request_target:
+    branches-ignore:
+      - v1.18
+      - v1.17
+      - v1.16
     types:
       - opened
       - synchronize
