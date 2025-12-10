@@ -4,7 +4,7 @@ name: Image CI Build
 on:
   pull_request_target:
     branches:
-      - '!**'
+      - v1.18
     types:
       - opened
       - synchronize
